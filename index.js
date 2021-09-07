@@ -1,7 +1,23 @@
-const http = require("http");
+const express = require('express');
+const app = express();
 
-http.createServer().listen(3000, () => {
-    console.log('Server listening on port 3000');
-}).on("request", require("./httpHandler"));
+const games = [
+    {
+        "displayName": "Cyberpank 2077",
+        "price": "60$",
+    },
+    {
+        "displayName": "SpongeBob SquarePants: Battle for Bikini Bottom – Rehydrated",
+        "price": "40$",
+    },
+    {
+        "displayName": "God Of War",
+        "price": "50$",
+    }
+]
 
+app.get('/products', (req, res) => res.json(games));
 
+app.listen(3000, () => {
+    console.log('Server running on port 3000');
+});
