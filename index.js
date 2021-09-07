@@ -1,22 +1,14 @@
+require('dotenv').config();
 const express = require('express');
 const app = express();
+const mongoose = require('mongoose');
+const GetProductService = require('./services/product/getProductService');
 
-const games = [
-    {
-        "displayName": "Cyberpank 2077",
-        "price": "60$",
-    },
-    {
-        "displayName": "SpongeBob SquarePants: Battle for Bikini Bottom – Rehydrated",
-        "price": "40$",
-    },
-    {
-        "displayName": "God Of War",
-        "price": "50$",
-    }
-]
+mongoose.connect('mongodb://localhost:27017/studentsLabDB').then(() => {
+    console.log('Database is running');
+}).catch(err => console.error(err));
 
-app.get('/products', (req, res) => res.json(games));
+app.get('/products', GetProductService);
 
 app.listen(3000, () => {
     console.log('Server running on port 3000');
