@@ -4,7 +4,7 @@ const app = express();
 const mongoose = require('mongoose');
 const GetProductService = require('./services/product/getProductService');
 
-mongoose.connect('mongodb://localhost:27017/studentsLabDB').then(() => {
+mongoose.connect(process.env.MONGODB_CONNECTION).then(() => {
     console.log('Database is running');
 }).catch(err => console.error(err));
 
