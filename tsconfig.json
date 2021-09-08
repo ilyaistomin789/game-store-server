@@ -5,13 +5,13 @@
 
     /* Modules */
     "module": "commonjs",                                /* Specify what module code is generated. */
-    "rootDir": "dist",                                   /* Specify the root folder within your source files. */
+    "rootDir": "src",                                   /* Specify the root folder within your source files. */
     "resolveJsonModule": true,                           /* Enable importing .json files */
 
     /* JavaScript Support */
     "allowJs": true,                                     /* Allow JavaScript files to be a part of your program. Use the `checkJS` option to get errors from these files. */
 
-    "outDir": "build",                                   /* Specify an output folder for all emitted files. */
+    "outDir": "dist",                                   /* Specify an output folder for all emitted files. */
 
     "esModuleInterop": true,                             /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables `allowSyntheticDefaultImports` for type compatibility. */
 
@@ -22,7 +22,7 @@
     "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
   },
   "include": [
-    "dist/**/*.ts"
+    "src/**/*.ts"
 ],
   "execMap": {
     "ts": "ts-node"

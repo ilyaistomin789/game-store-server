@@ -17,11 +17,11 @@
     "typescript": "^4.4.2"
   },
   "scripts": {
-    "start": "npm run build && node build/index.js",
-    "build": "rimraf ./build && tsc",
+    "start": "npm run build && node dist/index.js",
+    "build": "rimraf ./dist && tsc",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon index.js",
-    "dev:server": "nodemon ./dist/index.ts"
+    "dev:server": "nodemon ./src/index.ts"
   },
   "repository": {
     "type": "git",
