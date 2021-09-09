@@ -1,7 +1,7 @@
 import {Schema, Document, model, Types} from 'mongoose'
 
 export interface ProductI extends Document {
-    displayName: string;
+    displayName: string,
     categoryId: Types.ObjectId,
     totalRating: number,
     price: number

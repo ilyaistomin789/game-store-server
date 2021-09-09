@@ -1,5 +1,5 @@
 import App from './app';
-import ProductController from './db/controllers/product.controller';
+import ProductController from './controllers/product.controller';
 import { run } from './connection';
 
 const app = new App({
