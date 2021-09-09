@@ -1,13 +1,19 @@
 import express from 'express';
 import GetProductService from '../services/product/getProductService';
+import ControllerI from '../types/controller'
 
-class ProductController {
+class ProductController implements ControllerI {
     public router = express.Router();
-    constructor(){
+    public path: string;
+
+    constructor(path: string) {
+        this.path = path;
         this.initRoutes();
     }
-    private initRoutes(){
-        this.router.get('/products', GetProductService);
+
+    public initRoutes(): void {
+        this.router.get(this.path, GetProductService);
     }
 }
+
 export default ProductController;
