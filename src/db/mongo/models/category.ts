@@ -1,14 +1,8 @@
 import { Schema, model } from 'mongoose';
 import ICategory from '../../interfaces/category.interface';
+import { prop } from '@typegoose/typegoose';
 
-const schema = new Schema<ICategory>(
-  {
-    displayName: {
-      type: String,
-      required: true,
-    },
-  },
-  { timestamps: true }
-);
-
-export default model<ICategory>('Category', schema);
+export default class Category implements ICategory {
+  @prop({ required: true })
+  public displayName: string;
+}

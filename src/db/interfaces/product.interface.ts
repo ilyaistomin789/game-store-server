@@ -1,25 +1,8 @@
-import { Document, Schema } from 'mongoose';
-
 export default interface IProduct {
-  id?: number;
-  _id?: Schema.Types.ObjectId;
+  id?: string;
+  _id?: string;
   displayName: string;
-  categoryId: number | Schema.Types.ObjectId;
-  totalRating: number;
-  price: number;
-}
-
-export interface IProductMongo extends Document {
-  displayName: string;
-  categoryId: Schema.Types.ObjectId;
-  totalRating: number;
-  price: number;
-}
-
-export interface IProductPostgres {
-  id: number;
-  displayName: string;
-  categoryId: number;
+  categoryId?: string;
   totalRating: number;
   price: number;
 }

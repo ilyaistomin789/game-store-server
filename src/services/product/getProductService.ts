@@ -1,15 +1,16 @@
-import Product from '../../db/models/product';
-import { ProductI } from '../../db/models/product';
 import { Request, Response } from 'express';
-const getProductService = async (req: Request, res: Response): Promise<ProductI[] | void> => {
+import IProduct from '../../db/interfaces/product.interface';
+import { ProductRepository } from '../../db/';
+
+const getProductService = async (req: Request, res: Response): Promise<IProduct[] | void> => {
   try {
-    const products: ProductI[] = await Product.find(); // ProductRep.getProd(query)
-    if (!products.length) {
-      res.sendStatus(404);
+    const products = await ProductRepository.getProduct();
+    if (products !== null) {
+      res.send(products);
     } else {
-      res.json(products);
+      res.sendStatus(404);
     }
-  } catch (e: any) {
+  } catch (e) {
     res.send(e && e.message);
   }
 };

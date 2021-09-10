@@ -1,28 +1,15 @@
 import { Schema, model } from 'mongoose';
 import IProduct from '../../interfaces/product.interface';
+import { prop } from '@typegoose/typegoose';
+import Category from './category';
 
-const schema = new Schema<IProduct<Schema.Types.ObjectId>>(
-  {
-    displayName: {
-      type: String,
-      required: true,
-    },
-    categoryId: {
-      type: Schema.Types.ObjectId,
-      ref: 'Category',
-      required: true,
-    },
-    totalRating: {
-      type: Schema.Types.Number,
-    },
-    price: {
-      type: Schema.Types.Number,
-      required: true,
-    },
-  },
-  {
-    timestamps: true,
-  }
-);
-
-export default model<IProduct<Schema.Types.ObjectId>>('Product', schema);
+export default class Product implements IProduct {
+  @prop({ ref: () => Category })
+  public categoryId: string;
+  @prop()
+  public displayName: string;
+  @prop()
+  public price: number;
+  @prop()
+  public totalRating: number;
+}
