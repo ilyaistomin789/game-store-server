@@ -1,9 +1,9 @@
 import IProductRepository from './interfaces/productRepository.interface';
-import IProduct from './interfaces/product.interface';
+import { IProduct } from './interfaces/product.interface';
 import ProductTypegooseRepository from './repositories/productTypegooseRepository';
 import ProductTypeOrmRepository from './repositories/productTypeOrmRepository';
 import ICategoryRepository from './interfaces/categoryRepository.interface';
-import ICategory from './interfaces/category.interface';
+import { ICategory } from './interfaces/category.interface';
 import CategoryTypeOrmRepository from './repositories/categoryTypeOrmRepository';
 import CategoryTypegooseRepository from './repositories/categoryTypegooseRepository';
 import mongoose from 'mongoose';

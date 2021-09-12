@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import IProduct from '../../db/interfaces/product.interface';
+import { IProduct } from '../../db/interfaces/product.interface';
 import { ProductRepository } from '../../db/';
 
 const getProductService = async (req: Request, res: Response): Promise<IProduct[] | void> => {

@@ -1,16 +1,16 @@
 import express, { Application } from 'express';
-import ControllerI from './types/controller';
+import IController from './types/controller';
 
 class App {
   public app: Application;
   public port: number;
-  constructor(appInit: { port: number; controllers: [ControllerI] }) {
+  constructor(appInit: { port: number; controllers: IController[] }) {
     this.app = express();
     this.port = appInit.port;
     this.routes(appInit.controllers);
   }
 
-  private routes(controllers: [ControllerI]) {
+  private routes(controllers: IController[]) {
     controllers.forEach((controller) => {
       this.app.use('/', controller.router);
     });
