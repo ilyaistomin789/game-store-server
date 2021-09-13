@@ -1,9 +1,10 @@
-import express from 'express';
+import { Router } from 'express';
 import GetProductService from '../services/product/getProductService';
-import ControllerI from '../types/controller';
+import PostProductService from '../services/product/createProductService';
+import IController from '../types/controller';
 
-class ProductController implements ControllerI {
-  public router = express.Router();
+class ProductController implements IController {
+  public router = Router();
   public path: string;
 
   constructor(path: string) {
@@ -13,6 +14,7 @@ class ProductController implements ControllerI {
 
   public initRoutes(): void {
     this.router.get(this.path, GetProductService);
+    this.router.post(this.path, PostProductService);
   }
 }
 
