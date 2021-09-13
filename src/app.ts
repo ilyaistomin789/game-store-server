@@ -1,5 +1,7 @@
 import express, { Application } from 'express';
 import IController from './types/controller';
+import { logger } from 'express-winston';
+import { expressWinstonConfig, NODE_ENV } from './config';
 
 class App {
   public app: Application;
@@ -7,6 +9,7 @@ class App {
   constructor(appInit: { port: number; controllers: IController[] }) {
     this.app = express();
     this.app.use(express.json());
+    NODE_ENV !== 'production' && this.app.use(logger(expressWinstonConfig));
     this.port = appInit.port;
     this.routes(appInit.controllers);
   }
