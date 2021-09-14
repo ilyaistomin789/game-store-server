@@ -1,17 +1,15 @@
 import { Request, Response } from 'express';
 import { IProduct } from '../../db/interfaces/product.interface';
-import { ProductRepository } from '../../db/';
-import { DB, NODE_ENV } from '../../config';
-import { logger } from '../../logger';
 
-const getProductService = async (req: Request, res: Response): Promise<IProduct[] | void> => {
+import { DB } from '../../config';
+import { productsMongoHandler, productsPostgresHandler } from '../../handlers/getProductsHandler';
+
+const getProductService = async (req: Request, res: Response): Promise<void> => {
   try {
-    NODE_ENV !== 'production' && DB === 'mongo' && logger.debug(req.body);
-    const products = await ProductRepository.getProduct();
-    if (products !== null) {
-      res.send(products);
-    } else {
-      res.sendStatus(404);
+    if (DB === 'mongo') {
+      await productsMongoHandler(req, res);
+    } else if (DB === 'pg') {
+      await productsPostgresHandler(req, res);
     }
   } catch (e) {
     res.send(e && e.message);
