@@ -7,22 +7,28 @@ export interface IProduct {
   id?: number;
   _id?: Schema.Types.ObjectId;
   displayName: string;
-  category?: CategoryPostgres | CategoryMongo;
+  categories?: CategoryPostgres[] | Ref<CategoryMongo>[];
   totalRating: number;
   price: number;
+  updatedAt?: Date;
+  createdAt?: Date;
 }
 
 export interface IProductMongo {
   _id?: Schema.Types.ObjectId;
-  category: Ref<CategoryMongo>;
+  categories: Ref<CategoryMongo>[];
   displayName: string;
   totalRating: number;
   price: number;
+  updatedAt?: Date;
+  createdAt?: Date;
 }
 export interface IProductPostgres {
   id?: number;
   displayName: string;
-  category?: CategoryPostgres;
+  categories?: CategoryPostgres[];
   totalRating: number;
   price: number;
+  updatedAt: Date;
+  createdAt: Date;
 }

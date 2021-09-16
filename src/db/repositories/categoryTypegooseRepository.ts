@@ -12,6 +12,6 @@ export default class CategoryTypegooseRepository implements ICategoryRepository<
   }
 
   public async getCategory(): Promise<ICategoryMongo[]> {
-    return await this.categoryModel.find().exec();
+    return await this.categoryModel.find({}, 'displayName').exec();
   }
 }

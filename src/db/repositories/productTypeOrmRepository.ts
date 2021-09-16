@@ -9,12 +9,16 @@ export default class ProductTypeOrmRepository implements IProductRepository<IPro
   private manager = getConnectionManager().get('default');
   private productRepository = this.manager.getRepository<IProductPostgres>(Product);
   private categoryRepository = this.manager.getRepository<ICategoryPostgre>(Category);
-  public async createProduct(product: IProductPostgres, categoryId: number): Promise<void> {
-    const category = await this.categoryRepository.findOne(categoryId);
-    if (category) {
+  public async createProduct(product: IProductPostgres, categoryIds: number[]): Promise<void> {
+    const idArray = [];
+    categoryIds.forEach((id) => idArray.push({ id: id }));
+    const categories = await this.categoryRepository.find({
+      where: idArray,
+    });
+    if (categories) {
       const newProduct = new Product();
       newProduct.displayName = product.displayName;
-      newProduct.category = category;
+      newProduct.categories = categories;
       newProduct.price = product.price;
       newProduct.totalRating = product.totalRating;
       await this.productRepository.save(newProduct);

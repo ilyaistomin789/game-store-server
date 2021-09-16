@@ -13,7 +13,7 @@ export const productsMongoHandler = async (request: Request, response: Response)
   const productModel = getModelForClass(ProductMongo);
   let sortByValues: string[];
   const query: Query<ProductMongo, IProductMongo> = new Query<ProductMongo, IProductMongo>();
-  const { displayName, minRating, price, sortBy } = request.query;
+  const { displayName, minRating, price, sortBy, limit, page } = request.query;
   const andArray = [];
   if (displayName) {
     andArray.push({ displayName: { $regex: `.*${displayName}.*` } });
@@ -30,25 +30,31 @@ export const productsMongoHandler = async (request: Request, response: Response)
       andArray.push({ price: { $lt: +priceValues[1] } });
     }
   }
-  query.and(andArray);
+  andArray.length && query.and(andArray);
   if (sortBy) {
     sortByValues = `${sortBy}`.split(':');
+    query.sort({ [`${sortByValues[0]}`]: sortByValues[1] });
   }
-  if (!displayName && !minRating && !price && !sortBy) {
+  if (limit && page) {
+    const skip: number = (+page - 1) * +limit;
+    query.skip(skip);
+    query.limit(+limit);
+  } else if (limit && !page) {
+    query.limit(+limit);
+  }
+
+  if (!displayName && !minRating && !price && !sortBy && !page && !limit) {
     products = await ProductRepository.getProduct();
     sendResponse(products, response);
   } else {
-    products = await productModel
-      .find(query)
-      .sort(sortByValues ? { [`${sortByValues[0]}`]: sortByValues[1] } : 'ASC')
-      .exec();
+    products = await productModel.find(query).exec();
     sendResponse(products, response);
   }
 };
 
 export const productsPostgresHandler = async (request: Request, response: Response): Promise<void> => {
   const query = getRepository(ProductPostgres).createQueryBuilder('product');
-  const { displayName, minRating, price, sortBy } = request.query;
+  const { displayName, minRating, price, sortBy, limit, page } = request.query;
   query.where({});
   if (displayName) {
     query.andWhere('product.displayName LIKE :searchString', { searchString: `%${displayName}%` });
@@ -68,7 +74,14 @@ export const productsPostgresHandler = async (request: Request, response: Respon
     const sortByValues: string[] = `${sortBy}`.split(':');
     query.addOrderBy(sortByValues[0], sortByValues[1].toUpperCase() as 'ASC' | 'DESC');
   }
-  if (!displayName && !minRating && !price && !sortBy) {
+  if (limit && page) {
+    const skip: number = (+page - 1) * +limit;
+    query.skip(skip);
+    query.take(+limit);
+  } else if (limit && !page) {
+    query.take(+limit);
+  }
+  if (!displayName && !minRating && !price && !sortBy && !page && !limit) {
     products = await ProductRepository.getProduct();
     sendResponse(products, response);
   } else {

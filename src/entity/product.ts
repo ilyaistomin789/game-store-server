@@ -1,4 +1,14 @@
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
+  OneToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { IProductPostgres } from '../db/interfaces/product.interface';
 import Category from './category';
 
@@ -16,7 +26,13 @@ export default class Product implements IProductPostgres {
   @Column()
   totalRating: number;
 
-  @OneToOne((type) => Category)
-  @JoinColumn()
-  category: Category;
+  @ManyToMany((type) => Category, (category) => category.products)
+  @JoinTable()
+  categories: Category[];
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
 }
