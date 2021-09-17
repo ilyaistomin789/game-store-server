@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { getClass, getModelForClass } from '@typegoose/typegoose';
 import CategoryMongo from '../db/mongo/models/category';
 import { ICategory, ICategoryMongo, ICategoryPostgre } from '../db/interfaces/category.interface';
@@ -8,7 +8,7 @@ import CategoryPostgres from '../entity/category';
 let category: ICategory[];
 import ProductMongo from '../db/mongo/models/product';
 
-export const categoryMongoHandler = async (request: Request, response: Response): Promise<void> => {
+export const categoryMongoHandler = async (request: Request, response: Response, next: NextFunction): Promise<void> => {
   let category: ICategory;
   let productsForCategory: ICategory[];
   const { id } = request.params;
@@ -21,7 +21,7 @@ export const categoryMongoHandler = async (request: Request, response: Response)
     category = await categoryModel.findById(id, 'products displayName').lean();
     productsForCategory = await productModel.find({ _id: category.products }, 'displayName price totalRating');
     category['products'] = productsForCategory;
-    sendResponse(category, response);
+    sendResponse(category, response, next);
   } else if (`${includeTop3Products}` === 'top') {
     category = await categoryModel.findById(id, 'products displayName').lean();
     productsForCategory = await productModel
@@ -29,14 +29,18 @@ export const categoryMongoHandler = async (request: Request, response: Response)
       .limit(3)
       .sort({ totalRating: 'DESC' });
     category['products'] = productsForCategory;
-    sendResponse(category, response);
+    sendResponse(category, response, next);
   }
   if (!includeProducts && !includeTop3Products) {
     category = await categoryModel.findById(id, 'displayName');
-    sendResponse(category, response);
+    sendResponse(category, response, next);
   }
 };
-export const categoryPostgreHandler = async (request: Request, response: Response): Promise<void> => {
+export const categoryPostgreHandler = async (
+  request: Request,
+  response: Response,
+  next: NextFunction
+): Promise<void> => {
   const query = getRepository(CategoryPostgres).createQueryBuilder('category');
   const categoryRepository: Repository<ICategoryPostgre> = getConnection().getRepository(CategoryPostgres);
   const { id } = request.params;
@@ -49,17 +53,18 @@ export const categoryPostgreHandler = async (request: Request, response: Respons
   }
   if (!includeProducts && !includeTop3Products) {
     category = await categoryRepository.findByIds([id]);
-    sendResponse(category, response);
+    sendResponse(category, response, next);
   } else {
     category = await query.getMany();
-    sendResponse(category, response);
+    sendResponse(category, response, next);
   }
 };
 
-const sendResponse = (category: ICategory[] | ICategory, response: Response): void => {
-  if (category !== null) {
+const sendResponse = (category: ICategory[] | ICategory, response: Response, next: NextFunction): void => {
+  if (Object.keys(category).length !== 0) {
     response.send(category);
   } else {
-    response.sendStatus(404);
+    response.status(404);
+    next(new Error('Category not found'));
   }
 };

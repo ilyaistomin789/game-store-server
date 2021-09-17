@@ -1,16 +1,17 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { DB } from '../../config';
 import { categoryPostgreHandler, categoryMongoHandler } from '../../handlers/getCategoriesHandler';
 
-const getCategoryByIdService = async (request: Request, response: Response): Promise<void> => {
+const getCategoryByIdService = async (request: Request, response: Response, next: NextFunction): Promise<void> => {
   try {
     if (DB === 'mongo') {
-      await categoryMongoHandler(request, response);
+      await categoryMongoHandler(request, response, next);
     } else if (DB === 'pg') {
-      await categoryPostgreHandler(request, response);
+      await categoryPostgreHandler(request, response, next);
     }
   } catch (e) {
-    response.send(e.message);
+    response.status(400);
+    next(e);
   }
 };
 

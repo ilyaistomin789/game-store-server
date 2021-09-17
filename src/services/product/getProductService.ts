@@ -1,18 +1,18 @@
-import { Request, Response } from 'express';
-import { IProduct } from '../../db/interfaces/product.interface';
+import { NextFunction, Request, Response } from 'express';
 
 import { DB } from '../../config';
 import { productsMongoHandler, productsPostgresHandler } from '../../handlers/getProductsHandler';
 
-const getProductService = async (req: Request, res: Response): Promise<void> => {
+const getProductService = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     if (DB === 'mongo') {
-      await productsMongoHandler(req, res);
+      await productsMongoHandler(req, res, next);
     } else if (DB === 'pg') {
-      await productsPostgresHandler(req, res);
+      await productsPostgresHandler(req, res, next);
     }
   } catch (e) {
-    res.send(e && e.message);
+    res.status(400);
+    next(e);
   }
 };
 
