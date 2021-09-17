@@ -105,7 +105,7 @@ export const productsPostgresHandler = async (
 };
 
 const sendResponse = (products: IProduct[], response: Response, next: NextFunction): void => {
-  if (Object.keys(products).length !== 0) {
+  if (Object.keys(products).length) {
     response.send(products);
   } else {
     response.status(404);

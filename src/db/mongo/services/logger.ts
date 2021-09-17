@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
-import { logger } from '../../../logger';
+import logger from '../../../logger';
 const exec = mongoose.Query.prototype.exec;
-import { NODE_ENV } from '../../../config';
+import { NODE_ENV } from '../../../config/config';
 
 (() => {
   if (NODE_ENV !== 'production') {

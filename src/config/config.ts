@@ -9,6 +9,7 @@ export const DB_PORT = process.env.DB_PORT!;
 export const DB_PASSWORD = process.env.DB_PASSWORD!;
 export const NODE_ENV = process.env.NODE_ENV!;
 export const DB = process.env.DB!;
+export const JWT_SECRET = process.env.JWT_SECRET!;
 
 export const expressWinstonConfig = {
   transports: [new transports.Console()],

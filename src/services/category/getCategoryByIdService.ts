@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { DB } from '../../config';
+import { DB } from '../../config/config';
 import { categoryPostgreHandler, categoryMongoHandler } from '../../handlers/getCategoriesHandler';
 
 const getCategoryByIdService = async (request: Request, response: Response, next: NextFunction): Promise<void> => {

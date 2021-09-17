@@ -61,7 +61,7 @@ export const categoryPostgreHandler = async (
 };
 
 const sendResponse = (category: ICategory[] | ICategory, response: Response, next: NextFunction): void => {
-  if (Object.keys(category).length !== 0) {
+  if (Object.keys(category).length) {
     response.send(category);
   } else {
     response.status(404);

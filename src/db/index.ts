@@ -9,7 +9,7 @@ import CategoryTypegooseRepository from './repositories/categoryTypegooseReposit
 import mongoose from 'mongoose';
 import { createConnection } from 'typeorm';
 import { postgreConfig } from './config/config';
-import { DB_HOST, DB_PORT, DB_DATABASE_NAME } from '../config';
+import { DB_HOST, DB_PORT, DB_DATABASE_NAME } from '../config/config';
 import './mongo/services/logger';
 let ProductRepository: IProductRepository<IProduct>;
 let CategoryRepository: ICategoryRepository<ICategory>;
@@ -31,46 +31,3 @@ export const run = async (): Promise<void> => {
 };
 
 export { ProductRepository, CategoryRepository };
-//
-// static async getRecordsByPage(
-//     skip: number,
-//     limit: number,
-//     sorting: string,
-//     category: ? string,
-//     podCategory : ? string,
-//     from : Date,
-//     to: Date
-// ): Promise <any> {
-//   let query = {
-//     category,
-//     podCategory
-//   };
-//   if (category === 'any') {
-//   query = {};
-// }
-// if (podCategory === 'any') {
-//   delete query.podCategory;
-// }
-// const count: number = await Product.count(query)
-//     .where('createdAt')
-//     .gte(from)
-//     .lte(to);
-// const products: ProductDoc = await Product.find(query)
-//     .sort(sorting)
-//     .skip(skip)
-//     .limit(limit)
-//     .where('createdAt')
-//     .gte(from)
-//     .lte(to)
-//     .populate({
-//       path: 'category',
-//     })
-//     .populate({
-//       path: 'podCategory',
-//     });
-//
-// return {
-//   count,
-//   products
-// };
-// }
