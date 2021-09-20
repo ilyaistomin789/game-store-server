@@ -1,7 +1,7 @@
-import { IUserPostgres } from '../db/interfaces/user.interface';
+import { IAccountPostgres } from '../db/interfaces/account.interface';
 import { Column, CreateDateColumn, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
-export default class User implements IUserPostgres {
+export default class Account implements IAccountPostgres {
   @PrimaryGeneratedColumn()
   id: number;
   @Column('text')

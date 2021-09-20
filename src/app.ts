@@ -28,11 +28,13 @@ class App {
       console.log(e.message);
     }
   }
+
   public listen() {
     this.app.listen(this.port, () => {
       console.log(`App listening on the port ${this.port}`);
     });
   }
+
   private errorHandler = (err: Error, req: Request, res: Response, next: NextFunction): void => {
     logger.error(JSON.stringify(err));
     res.send(err.message);

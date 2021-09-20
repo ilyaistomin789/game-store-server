@@ -1,10 +1,10 @@
 import { ExtractJwt, Strategy as JwtStrategy } from 'passport-jwt';
 import { Strategy as LocalStrategy } from 'passport-local';
 import { JWT_SECRET, DB } from './config';
-import { IUser } from '../db/interfaces/user.interface';
+import { IAccount } from '../db/interfaces/account.interface';
 import { getModelForClass } from '@typegoose/typegoose';
-import UserMongo from '../db/mongo/models/user';
-import UserPostgres from '../entity/user';
+import UserMongo from '../db/mongo/models/account';
+import UserPostgres from '../entity/account';
 import { getConnection } from 'typeorm';
 import { compare } from 'bcrypt';
 interface IOpts {
@@ -18,18 +18,18 @@ const initializePassport = (passport): void => {
   };
   const authenticateUserLocal = async (username, password, done) => {
     try {
-      let user: IUser;
+      let account: IAccount;
       if (DB === 'mongo') {
-        user = await getModelForClass(UserMongo).findOne({ username });
+        account = await getModelForClass(UserMongo).findOne({ username });
       } else if (DB === 'pg') {
-        user = await getConnection().getRepository(UserPostgres).findOne({ username });
+        account = await getConnection().getRepository(UserPostgres).findOne({ username });
       }
-      if (!user) {
+      if (!account) {
         return done(null, false, { message: 'Incorrect username' });
       }
-      const result = compare(password, user.password);
+      const result = compare(password, account.password);
       if (result) {
-        return done(null, user);
+        return done(null, account);
       } else {
         return done(null, false, { message: 'Incorrect password' });
       }
@@ -37,16 +37,16 @@ const initializePassport = (passport): void => {
       done(e, false);
     }
   };
-  async function authenticateUserJwt(jwt_payload, done) {
+  async function authenticateUserJwt(jwtPayload, done) {
     try {
-      let user: IUser;
+      let account: IAccount;
       if (DB === 'mongo') {
-        user = await getModelForClass(UserMongo).findById(jwt_payload.id);
+        account = await getModelForClass(UserMongo).findById(jwtPayload.id);
       } else if (DB === 'pg') {
-        user = await getConnection().getRepository(UserPostgres).findOne(jwt_payload.id);
+        account = await getConnection().getRepository(UserPostgres).findOne(jwtPayload.id);
       }
-      if (user) {
-        done(null, user);
+      if (account) {
+        done(null, account);
       } else {
         done(null, false);
       }
