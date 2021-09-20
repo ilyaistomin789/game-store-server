@@ -5,11 +5,14 @@ import { expressWinstonConfig, NODE_ENV } from './config/config';
 import logger from './logger';
 import initializePassport from './config/passport-config';
 import passport from 'passport';
+import swaggerUi from 'swagger-ui-express';
+import swaggerDocument from './config/swagger-config';
 class App {
   public app: Application;
   public port: number;
   constructor(appInit: { port: number; controllers: IController[] }) {
     this.app = express();
+    this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
     initializePassport(passport);
     this.app.use(passport.initialize());
     this.app.use(express.json());
