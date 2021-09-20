@@ -1,7 +1,7 @@
 import { Router } from 'express';
 
 export default interface IController {
-  path: string;
+  path?: string;
   router: Router;
 
   initRoutes(): void;
