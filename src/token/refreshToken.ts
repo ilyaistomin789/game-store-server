@@ -48,7 +48,6 @@ const generateAccessAndRefreshTokens = (
   if (!refreshToken) {
     throw new Error('Please enter a refresh token');
   }
-  console.log(findRefreshToken(refreshToken));
   if (findRefreshToken(refreshToken)) {
     removeRefreshToken(refreshToken);
     return getNewAccessAndRefreshTokens(account);
