@@ -1,5 +1,5 @@
 import { Column, Entity, PrimaryGeneratedColumn, ManyToMany, CreateDateColumn, UpdateDateColumn } from 'typeorm';
-import { ICategoryPostgre } from '../db/interfaces/category.interface';
+import { ICategoryPostgre } from '../../interfaces/category.interface';
 import Product from './product';
 
 @Entity()

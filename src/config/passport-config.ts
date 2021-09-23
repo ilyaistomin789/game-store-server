@@ -4,7 +4,7 @@ import { JWT_SECRET, DB } from './config';
 import { IAccount } from '../db/interfaces/account.interface';
 import { getModelForClass } from '@typegoose/typegoose';
 import AccountMongo from '../db/mongo/models/account';
-import AccountPostgres from '../entity/account';
+import AccountPostgres from '../db/postgres/entity/account';
 import { getConnection } from 'typeorm';
 import bcrypt from 'bcrypt';
 interface IOpts {

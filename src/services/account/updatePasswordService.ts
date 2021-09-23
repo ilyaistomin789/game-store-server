@@ -1,10 +1,11 @@
 import { NextFunction, Request, Response } from 'express';
 import { AccountRepository } from '../../db';
-const updatePasswordService = async (request: Request, response: Response, next: NextFunction) => {
+const updatePasswordService = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { username, newPassword } = request.body;
-    await AccountRepository.updatePassword(username, newPassword);
-    response.send('Password updated successfully');
+    const { newPassword } = req.body;
+    const { id, _id } = req.user;
+    await AccountRepository.updatePassword(_id ? _id : id, newPassword);
+    res.send('Password updated successfully');
   } catch (e) {
     next(e);
   }

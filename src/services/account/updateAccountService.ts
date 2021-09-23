@@ -1,12 +1,14 @@
 import { NextFunction, Request, Response } from 'express';
 import { AccountRepository } from '../../db';
-const updateAccountService = async (request: Request, response: Response, next: NextFunction) => {
+const updateAccountService = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { username, firstName, lastName } = request.body;
-    await AccountRepository.updateAccount({ username, firstName, lastName });
-    response.send('Account was updated');
+    const { firstName, lastName } = req.body;
+    const { _id, id } = req.user;
+
+    await AccountRepository.updateAccount(_id ? _id : id, { firstName, lastName });
+    res.send('Account was updated');
   } catch (e) {
-    response.status(400);
+    res.status(400);
     next(e);
   }
 };

@@ -7,7 +7,7 @@ import { ICategory } from './interfaces/category.interface';
 import CategoryTypeOrmRepository from './repositories/categoryTypeOrmRepository';
 import CategoryTypegooseRepository from './repositories/categoryTypegooseRepository';
 import mongoose from 'mongoose';
-import { createConnection, getConnection, Repository } from 'typeorm';
+import { createConnection } from 'typeorm';
 import { postgreConfig } from './config/config';
 import { DB_HOST, DB_PORT, DB_DATABASE_NAME } from '../config/config';
 import './mongo/services/logger';
@@ -15,9 +15,14 @@ import { IAccountRepository } from './interfaces/accountRepository.interface';
 import { IAccount } from './interfaces/account.interface';
 import AccountTypegooseRepository from './repositories/accountTypegooseRepository';
 import AccountTypeOrmRepository from './repositories/accountTypeOrmRepository';
+import { IUserRatingsRepository } from './interfaces/userRatingsRepository.interface';
+import { IUserRatings } from './interfaces/userRatings.interface';
+import UserRatingsTypegooseRepository from './repositories/userRatingsTypegooseRepository';
+import UserRatingsTypeOrmRepository from './repositories/userRatingsTypeOrmRepository';
 let ProductRepository: IProductRepository<IProduct>;
 let CategoryRepository: ICategoryRepository<ICategory>;
 let AccountRepository: IAccountRepository<IAccount>;
+let UserRatingsRepository: IUserRatingsRepository;
 
 export const run = async (): Promise<void> => {
   try {
@@ -26,15 +31,17 @@ export const run = async (): Promise<void> => {
       ProductRepository = new ProductTypegooseRepository();
       CategoryRepository = new CategoryTypegooseRepository();
       AccountRepository = new AccountTypegooseRepository();
+      UserRatingsRepository = new UserRatingsTypegooseRepository();
     } else if (process.env.DB === 'pg') {
       await createConnection(postgreConfig);
       ProductRepository = new ProductTypeOrmRepository();
       CategoryRepository = new CategoryTypeOrmRepository();
       AccountRepository = new AccountTypeOrmRepository();
+      UserRatingsRepository = new UserRatingsTypeOrmRepository();
     }
   } catch (e) {
     console.log(e.message);
   }
 };
 
-export { ProductRepository, CategoryRepository, AccountRepository };
+export { ProductRepository, CategoryRepository, AccountRepository, UserRatingsRepository };

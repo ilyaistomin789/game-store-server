@@ -2,6 +2,7 @@ import randToken from 'rand-token';
 import { JWT_SECRET } from '../config/config';
 import jwt from 'jsonwebtoken';
 export interface IRefreshToken {
+  username: string;
   refreshToken: string;
 }
 export interface IToken {
@@ -10,47 +11,49 @@ export interface IToken {
 }
 let refreshTokens: IRefreshToken[] = [];
 
-const addRefreshToken = (refreshToken: IRefreshToken) => {
-  refreshTokens.push(refreshToken);
+const addRefreshToken = (data: IRefreshToken) => {
+  refreshTokens.push(data);
 };
 
-const removeRefreshToken = (refreshToken: IRefreshToken) => {
-  refreshTokens = refreshTokens.filter((tk) => tk.refreshToken !== refreshToken.refreshToken);
+const removeRefreshToken = (refreshToken: string) => {
+  refreshTokens = refreshTokens.filter((tk) => tk.refreshToken !== refreshToken);
 };
 
 const showRefreshTokens = () => {
   console.log(refreshTokens);
 };
 
-const getAndSaveRefreshToken = (): string => {
+const getAndSaveRefreshToken = (username: string): string => {
   const refreshToken = randToken.uid(256);
-  addRefreshToken({ refreshToken });
+  addRefreshToken({ username, refreshToken });
   return refreshToken;
 };
-const findRefreshToken = (refreshToken: IRefreshToken): Boolean => {
-  return refreshTokens.some((tk) => tk.refreshToken === refreshToken.refreshToken);
+const findRefreshToken = (refreshToken: string): Boolean => {
+  return refreshTokens.some((tk) => tk.refreshToken === refreshToken);
 };
-const getNewAccessAndRefreshTokens = (account: { username: string; role: string }): IToken => {
-  const accessToken = jwt.sign(account, JWT_SECRET, {
+const getNewAccessAndRefreshTokens = (username: string): IToken => {
+  console.log(username);
+  const accessToken = jwt.sign({ username }, JWT_SECRET, {
     expiresIn: 3600 * 24,
   });
-  const refreshToken = getAndSaveRefreshToken();
+  const refreshToken = getAndSaveRefreshToken(username);
   return { accessToken, refreshToken };
 };
-const generateNewAccessAndRefreshTokens = (account: { username: string; role: string }) => {
-  return getNewAccessAndRefreshTokens(account);
+const generateNewAccessAndRefreshTokens = (username: string) => {
+  return getNewAccessAndRefreshTokens(username);
 };
-
-const generateAccessAndRefreshTokens = (
-  account: { username: string; role: string },
-  refreshToken: IRefreshToken
-): IToken => {
+const getUsernameUsingToken = (refreshToken: string) => {
+  console.log(refreshTokens.find((tk) => tk.refreshToken === refreshToken).username);
+  return refreshTokens.find((tk) => tk.refreshToken === refreshToken).username;
+};
+const generateAccessAndRefreshTokens = (refreshToken: string): IToken => {
   if (!refreshToken) {
     throw new Error('Please enter a refresh token');
   }
   if (findRefreshToken(refreshToken)) {
+    const username = getUsernameUsingToken(refreshToken);
     removeRefreshToken(refreshToken);
-    return getNewAccessAndRefreshTokens(account);
+    return getNewAccessAndRefreshTokens(username);
   } else throw new Error('Wrong refresh token');
 };
 

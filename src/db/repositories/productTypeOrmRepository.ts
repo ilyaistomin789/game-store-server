@@ -1,9 +1,9 @@
 import IProductRepository from '../interfaces/productRepository.interface';
 import { IProductPostgres } from '../interfaces/product.interface';
-import Product from '../../entity/product';
+import Product from '../postgres/entity/product';
 import { getConnectionManager } from 'typeorm';
 import { ICategoryPostgre } from '../interfaces/category.interface';
-import Category from '../../entity/category';
+import Category from '../postgres/entity/category';
 
 export default class ProductTypeOrmRepository implements IProductRepository<IProductPostgres> {
   private manager = getConnectionManager().get('default');

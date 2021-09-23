@@ -1,5 +1,6 @@
-import { IAccountPostgres } from '../db/interfaces/account.interface';
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { IAccountPostgres } from '../../interfaces/account.interface';
+import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import UserRatings from './userRatings';
 
 @Entity()
 export default class Account implements IAccountPostgres {
@@ -15,6 +16,8 @@ export default class Account implements IAccountPostgres {
   password: string;
   @Column('text')
   role: string;
+  @OneToMany(() => UserRatings, (userRatings) => userRatings.account)
+  userRatings!: UserRatings[];
   @CreateDateColumn()
   createdAt: Date;
   @UpdateDateColumn()

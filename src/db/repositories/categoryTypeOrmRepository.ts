@@ -1,7 +1,7 @@
 import { ICategoryPostgre } from '../interfaces/category.interface';
 import ICategoryRepository from '../interfaces/categoryRepository.interface';
 import { getConnection, Repository } from 'typeorm';
-import Category from '../../entity/category';
+import Category from '../postgres/entity/category';
 
 export default class CategoryTypeOrmRepository implements ICategoryRepository<ICategoryPostgre> {
   private categoryRepository: Repository<ICategoryPostgre> = getConnection().getRepository(Category);

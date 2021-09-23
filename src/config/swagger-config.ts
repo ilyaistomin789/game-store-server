@@ -214,14 +214,13 @@ const swaggerConfig = {
               type: 'object',
               required: ['username', 'firstName', 'lastName'],
               properties: {
-                username: {
-                  type: 'string',
-                },
                 firstName: {
                   type: 'string',
+                  example: 'Ilya',
                 },
                 lastName: {
                   type: 'string',
+                  example: 'Istomin',
                 },
               },
             },
@@ -241,7 +240,7 @@ const swaggerConfig = {
       },
     },
     '/profile/password': {
-      put: {
+      post: {
         tags: ['Accounts'],
         security: [
           {
@@ -261,13 +260,15 @@ const swaggerConfig = {
             required: true,
             schema: {
               type: 'object',
-              required: ['username', 'newPassword'],
+              required: ['newPassword', 'oldPassword'],
               properties: {
-                username: {
+                oldPassword: {
                   type: 'string',
+                  example: 'oldPassword',
                 },
                 newPassword: {
                   type: 'string',
+                  example: 'newPassword',
                 },
               },
             },
@@ -302,16 +303,15 @@ const swaggerConfig = {
             required: true,
             schema: {
               type: 'object',
-              required: ['username', 'password', 'role'],
+              required: ['username', 'password'],
               properties: {
                 username: {
                   type: 'string',
+                  example: 'stmnl',
                 },
                 password: {
                   type: 'string',
-                },
-                role: {
-                  type: 'string',
+                  example: 'password',
                 },
               },
             },
@@ -344,11 +344,6 @@ const swaggerConfig = {
     '/token': {
       post: {
         tags: ['Auth'],
-        security: [
-          {
-            Bearer: [],
-          },
-        ],
         summary: 'Refreshing Access and Refresh tokens',
         description: '',
         operationId: 'refreshingTokens',
@@ -415,7 +410,7 @@ const swaggerConfig = {
         categories: {
           type: 'array',
           items: {
-            type: 'number',
+            type: ['number', 'string'],
           },
           example: '[1,2]',
         },

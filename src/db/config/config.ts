@@ -10,12 +10,12 @@ export const postgreConfig: ConnectionOptions = {
   database: DB_DATABASE_NAME,
   synchronize: true,
   logging: false,
-  entities: ['src/entity/**/*.ts'],
-  migrations: ['src/migration/**/*.ts'],
-  subscribers: ['src/subscriber/**/*.ts'],
+  entities: ['src/db/postgres/entity/**/*.ts'],
+  migrations: ['src/db/postgres/migration/**/*.ts'],
+  subscribers: ['src/db/postgres/subscriber/**/*.ts'],
   cli: {
-    entitiesDir: 'src/entity',
-    migrationsDir: 'src/migration',
-    subscribersDir: 'src/subscriber',
+    entitiesDir: 'src/db/postgres/entity',
+    migrationsDir: 'src/db/postgres/migration',
+    subscribersDir: 'src/db/postgres/subscriber',
   },
 };

@@ -1,7 +1,7 @@
 import { IAccountRepository } from '../interfaces/accountRepository.interface';
 import { IAccountPostgres } from '../interfaces/account.interface';
 import { getConnection, Repository } from 'typeorm';
-import Account from '../../entity/account';
+import Account from '../postgres/entity/account';
 import bcrypt from 'bcrypt';
 
 export default class AccountTypeOrmRepository implements IAccountRepository<IAccountPostgres> {
@@ -17,14 +17,14 @@ export default class AccountTypeOrmRepository implements IAccountRepository<IAcc
     await this.accountRepository.save(newUser);
   }
 
-  public async updatePassword(username: string, newPassword: string): Promise<void> {
-    const userToUpdate: IAccountPostgres = await this.accountRepository.findOne({ username: username });
+  public async updatePassword(accountId: number, newPassword: string): Promise<void> {
+    const userToUpdate: IAccountPostgres = await this.accountRepository.findOne(accountId);
     userToUpdate.password = await bcrypt.hash(newPassword, 10);
     await this.accountRepository.save(userToUpdate);
   }
 
-  public async updateAccount(account: IAccountPostgres): Promise<void> {
-    const userToUpdate: IAccountPostgres = await this.accountRepository.findOne({ username: account.username });
+  public async updateAccount(accountId: number, account: IAccountPostgres): Promise<void> {
+    const userToUpdate: IAccountPostgres = await this.accountRepository.findOne(accountId);
     userToUpdate.firstName = account.firstName;
     userToUpdate.lastName = account.lastName;
     await this.accountRepository.save(userToUpdate);

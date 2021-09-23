@@ -4,15 +4,15 @@ import CategoryMongo from '../db/mongo/models/category';
 import { ICategory, ICategoryMongo, ICategoryPostgre } from '../db/interfaces/category.interface';
 import { Query } from 'mongoose';
 import { getConnection, getRepository, Repository } from 'typeorm';
-import CategoryPostgres from '../entity/category';
+import CategoryPostgres from '../db/postgres/entity/category';
 let category: ICategory[];
 import ProductMongo from '../db/mongo/models/product';
 
-export const categoryMongoHandler = async (request: Request, response: Response, next: NextFunction): Promise<void> => {
+export const categoryMongoHandler = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   let category: ICategory;
   let productsForCategory: ICategory[];
-  const { id } = request.params;
-  const { includeProducts, includeTop3Products } = request.query;
+  const { id } = req.params;
+  const { includeProducts, includeTop3Products } = req.query;
   const categoryModel = getModelForClass(CategoryMongo);
   const productModel = getModelForClass(ProductMongo);
   const query: Query<CategoryMongo, ICategoryMongo> = new Query<CategoryMongo, ICategoryMongo>();
@@ -21,7 +21,7 @@ export const categoryMongoHandler = async (request: Request, response: Response,
     category = await categoryModel.findById(id, 'products displayName').lean();
     productsForCategory = await productModel.find({ _id: category.products }, 'displayName price totalRating');
     category['products'] = productsForCategory;
-    sendResponse(category, response, next);
+    sendResponse(category, res, next);
   } else if (`${includeTop3Products}` === 'top') {
     category = await categoryModel.findById(id, 'products displayName').lean();
     productsForCategory = await productModel
@@ -29,22 +29,18 @@ export const categoryMongoHandler = async (request: Request, response: Response,
       .limit(3)
       .sort({ totalRating: 'DESC' });
     category['products'] = productsForCategory;
-    sendResponse(category, response, next);
+    sendResponse(category, res, next);
   }
   if (!includeProducts && !includeTop3Products) {
     category = await categoryModel.findById(id, 'displayName');
-    sendResponse(category, response, next);
+    sendResponse(category, res, next);
   }
 };
-export const categoryPostgreHandler = async (
-  request: Request,
-  response: Response,
-  next: NextFunction
-): Promise<void> => {
+export const categoryPostgreHandler = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const query = getRepository(CategoryPostgres).createQueryBuilder('category');
   const categoryRepository: Repository<ICategoryPostgre> = getConnection().getRepository(CategoryPostgres);
-  const { id } = request.params;
-  const { includeProducts, includeTop3Products } = request.query;
+  const { id } = req.params;
+  const { includeProducts, includeTop3Products } = req.query;
   query.where({ id });
   if (`${includeProducts}` === 'true' && `${includeTop3Products}` !== 'top') {
     query.innerJoinAndSelect('category.products', 'product');
@@ -53,10 +49,10 @@ export const categoryPostgreHandler = async (
   }
   if (!includeProducts && !includeTop3Products) {
     category = await categoryRepository.findByIds([id]);
-    sendResponse(category, response, next);
+    sendResponse(category, res, next);
   } else {
     category = await query.getMany();
-    sendResponse(category, response, next);
+    sendResponse(category, res, next);
   }
 };
 

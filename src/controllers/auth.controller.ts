@@ -3,6 +3,7 @@ import { Router, Request, Response, NextFunction } from 'express';
 import passport from 'passport';
 import AuthenticateService from '../services/auth/authenticateService';
 import RefreshTokenService from '../services/auth/refreshTokenService';
+import { AccountRepository } from '../db';
 
 export default class AuthController implements IController {
   router: Router;
@@ -16,9 +17,9 @@ export default class AuthController implements IController {
     this.router.post(
       '/authenticate',
       passport.authenticate('local', { session: false }),
-      (req: Request, res: Response, next: NextFunction) => {
-        const { username, role } = req.body;
-        const tokens = AuthenticateService(next, { username, role });
+      async (req: Request, res: Response, next: NextFunction) => {
+        const { username } = req.body;
+        const tokens = AuthenticateService(next, username);
         res.json(tokens);
       }
     );

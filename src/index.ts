@@ -4,6 +4,16 @@ import { run } from './db/';
 import CategoryController from './controllers/category.controller';
 import AuthController from './controllers/auth.controller';
 import AccountController from './controllers/account.controller';
+import UserRatingsController from './controllers/userRatings.controller';
+import { IAccount } from './db/interfaces/account.interface';
+
+declare global {
+  namespace Express {
+    interface Request {
+      user: IAccount;
+    }
+  }
+}
 
 run();
 const app = new App({
@@ -13,6 +23,7 @@ const app = new App({
     new CategoryController('/categories'),
     new AuthController(),
     new AccountController('/profile'),
+    new UserRatingsController(),
   ],
 });
 

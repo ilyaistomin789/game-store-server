@@ -3,6 +3,7 @@ import { IAccountMongo } from '../interfaces/account.interface';
 import { getModelForClass } from '@typegoose/typegoose';
 import Account from '../mongo/models/account';
 import bcrypt from 'bcrypt';
+import { Schema } from 'mongoose';
 
 export default class AccountTypegooseRepository implements IAccountRepository<IAccountMongo> {
   private accountModel = getModelForClass(Account);
@@ -17,19 +18,15 @@ export default class AccountTypegooseRepository implements IAccountRepository<IA
     });
   }
 
-  public async updatePassword(username: string, newPassword: string): Promise<void> {
+  public async updatePassword(accountId: Schema.Types.ObjectId, newPassword: string): Promise<void> {
     const passwordHash = await bcrypt.hash(newPassword, 10);
-    await this.accountModel.findOneAndUpdate(
-      { username: username },
-      { $set: { password: passwordHash } },
-      { new: true }
-    );
+    await this.accountModel.findOneAndUpdate({ _id: accountId }, { $set: { password: passwordHash } }, { new: true });
   }
 
-  public async updateAccount(account: IAccountMongo): Promise<void> {
+  public async updateAccount(accountId: Schema.Types.ObjectId, account: IAccountMongo): Promise<void> {
     await this.accountModel.findOneAndUpdate(
-      { username: account.username },
-      { $set: { firstName: account.firstName, lastName: account.lastName, username: account.username } },
+      { _id: accountId },
+      { $set: { firstName: account.firstName, lastName: account.lastName } },
       { new: true }
     );
   }

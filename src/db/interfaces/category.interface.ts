@@ -1,5 +1,5 @@
 import { Schema } from 'mongoose';
-import ProductPostgre from '../../entity/product';
+import ProductPostgre from '../postgres/entity/product';
 import ProductMongo from '../mongo/models/product';
 import { Ref } from '@typegoose/typegoose';
 export interface ICategory {

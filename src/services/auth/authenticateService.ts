@@ -6,11 +6,11 @@ import {
   generateNewAccessAndRefreshTokens,
   getAndSaveRefreshToken,
 } from '../../token/refreshToken';
-import { NextFunction } from 'express';
+import { NextFunction, Request, Response } from 'express';
 
-const authenticateService = (next: NextFunction, account: { username: string; role: string }) => {
+const authenticateService = (next: NextFunction, username: string) => {
   try {
-    return generateNewAccessAndRefreshTokens(account);
+    return generateNewAccessAndRefreshTokens(username);
   } catch (e) {
     next(e);
   }

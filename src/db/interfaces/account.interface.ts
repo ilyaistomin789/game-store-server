@@ -5,7 +5,7 @@ export interface IAccount {
   _id?: Schema.Types.ObjectId;
   firstName: string;
   lastName: string;
-  username: string;
+  username?: string;
   password?: string;
   role?: string;
   updatedAt?: Date;

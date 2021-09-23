@@ -1,8 +1,8 @@
 import { Schema } from 'mongoose';
-import { Ref } from '@typegoose/typegoose';
-import CategoryPostgres from '../../entity/category';
+import { DocumentType, Ref } from '@typegoose/typegoose';
+import CategoryPostgres from '../postgres/entity/category';
 import CategoryMongo from '../mongo/models/category';
-
+import { IUserRatingsMongo } from './userRatings.interface';
 export interface IProduct {
   id?: number;
   _id?: Schema.Types.ObjectId;
@@ -12,6 +12,7 @@ export interface IProduct {
   price: number;
   updatedAt?: Date;
   createdAt?: Date;
+  ratings?: Ref<IUserRatingsMongo>[];
 }
 
 export interface IProductMongo {
@@ -22,6 +23,7 @@ export interface IProductMongo {
   price: number;
   updatedAt?: Date;
   createdAt?: Date;
+  ratings?: Ref<IUserRatingsMongo>[];
 }
 export interface IProductPostgres {
   id?: number;
