@@ -32,7 +32,6 @@ const findRefreshToken = (refreshToken: string): Boolean => {
   return refreshTokens.some((tk) => tk.refreshToken === refreshToken);
 };
 const getNewAccessAndRefreshTokens = (username: string): IToken => {
-  console.log(username);
   const accessToken = jwt.sign({ username }, JWT_SECRET, {
     expiresIn: 3600 * 24,
   });
@@ -43,7 +42,6 @@ const generateNewAccessAndRefreshTokens = (username: string) => {
   return getNewAccessAndRefreshTokens(username);
 };
 const getUsernameUsingToken = (refreshToken: string) => {
-  console.log(refreshTokens.find((tk) => tk.refreshToken === refreshToken).username);
   return refreshTokens.find((tk) => tk.refreshToken === refreshToken).username;
 };
 const generateAccessAndRefreshTokens = (refreshToken: string): IToken => {

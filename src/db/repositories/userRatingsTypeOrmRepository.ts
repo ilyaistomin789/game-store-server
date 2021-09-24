@@ -3,7 +3,6 @@ import { IUserRatingsDto, IUserRatingsPostgres } from '../interfaces/userRatings
 import { getConnectionManager } from 'typeorm';
 import { IProductPostgres } from '../interfaces/product.interface';
 import Product from '../postgres/entity/product';
-import { AccountRepository } from '../index';
 import UserRatings from '../postgres/entity/userRatings';
 
 export default class UserRatingsTypeOrmRepository implements IUserRatingsRepository {
@@ -34,7 +33,7 @@ export default class UserRatingsTypeOrmRepository implements IUserRatingsReposit
       .where('user_ratings.productId=:productId', { productId: data.product })
       .getRawOne();
     const currentProduct = await this.productRepository.findOne(data.product);
-    currentProduct.totalRating = ratingsSum / ratingsCount;
+    currentProduct.totalRating = Math.round(ratingsSum / ratingsCount);
     await this.productRepository.save(currentProduct);
   }
 }

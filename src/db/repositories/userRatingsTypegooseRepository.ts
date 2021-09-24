@@ -18,10 +18,9 @@ export default class UserRatingsTypegooseRepository implements IUserRatingsRepos
       product.ratings[index].rating = data.rating;
       product.ratings[index].comments = data.comments;
     }
-    const sum: number = product.ratings
-      .map((rating) => rating.rating)
-      .reduce((previousValue, currentValue) => previousValue + currentValue);
+    const sum: number = product.ratings.reduce((accum, currentValue) => accum + currentValue.rating, 0);
     product.totalRating = sum / product.ratings.length;
+
     await this.productModel.findOneAndUpdate(
       { _id: product._id },
       { $set: { totalRating: product.totalRating, ratings: product.ratings } }

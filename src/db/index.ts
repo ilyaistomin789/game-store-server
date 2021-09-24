@@ -16,13 +16,16 @@ import { IAccount } from './interfaces/account.interface';
 import AccountTypegooseRepository from './repositories/accountTypegooseRepository';
 import AccountTypeOrmRepository from './repositories/accountTypeOrmRepository';
 import { IUserRatingsRepository } from './interfaces/userRatingsRepository.interface';
-import { IUserRatings } from './interfaces/userRatings.interface';
 import UserRatingsTypegooseRepository from './repositories/userRatingsTypegooseRepository';
 import UserRatingsTypeOrmRepository from './repositories/userRatingsTypeOrmRepository';
+import IOrderListRepository from './interfaces/orderListRepository.interface';
+import OrderListTypeOrmRepository from './repositories/orderListTypeOrmRepository';
+import OrderListTypegooseRepository from './repositories/orderListTypegooseRepository';
 let ProductRepository: IProductRepository<IProduct>;
 let CategoryRepository: ICategoryRepository<ICategory>;
 let AccountRepository: IAccountRepository<IAccount>;
 let UserRatingsRepository: IUserRatingsRepository;
+let OrderListRepository: IOrderListRepository;
 
 export const run = async (): Promise<void> => {
   try {
@@ -32,16 +35,18 @@ export const run = async (): Promise<void> => {
       CategoryRepository = new CategoryTypegooseRepository();
       AccountRepository = new AccountTypegooseRepository();
       UserRatingsRepository = new UserRatingsTypegooseRepository();
+      OrderListRepository = new OrderListTypegooseRepository();
     } else if (process.env.DB === 'pg') {
       await createConnection(postgreConfig);
       ProductRepository = new ProductTypeOrmRepository();
       CategoryRepository = new CategoryTypeOrmRepository();
       AccountRepository = new AccountTypeOrmRepository();
       UserRatingsRepository = new UserRatingsTypeOrmRepository();
+      OrderListRepository = new OrderListTypeOrmRepository();
     }
   } catch (e) {
     console.log(e.message);
   }
 };
 
-export { ProductRepository, CategoryRepository, AccountRepository, UserRatingsRepository };
+export { ProductRepository, CategoryRepository, AccountRepository, UserRatingsRepository, OrderListRepository };

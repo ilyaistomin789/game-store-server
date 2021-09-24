@@ -6,6 +6,7 @@ import AuthController from './controllers/auth.controller';
 import AccountController from './controllers/account.controller';
 import UserRatingsController from './controllers/userRatings.controller';
 import { IAccount } from './db/interfaces/account.interface';
+import OrderListController from './controllers/orderList.controller';
 
 declare global {
   namespace Express {
@@ -24,6 +25,7 @@ const app = new App({
     new AuthController(),
     new AccountController('/profile'),
     new UserRatingsController(),
+    new OrderListController('/order-list'),
   ],
 });
 
