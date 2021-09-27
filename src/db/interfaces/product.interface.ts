@@ -1,5 +1,5 @@
 import { Schema } from 'mongoose';
-import { DocumentType, Ref } from '@typegoose/typegoose';
+import { Ref } from '@typegoose/typegoose';
 import CategoryPostgres from '../postgres/entity/category';
 import CategoryMongo from '../mongo/models/category';
 import { IUserRatingsMongo } from './userRatings.interface';
@@ -31,6 +31,6 @@ export interface IProductPostgres {
   categories?: CategoryPostgres[];
   totalRating: number;
   price: number;
-  updatedAt: Date;
-  createdAt: Date;
+  updatedAt?: Date;
+  createdAt?: Date;
 }

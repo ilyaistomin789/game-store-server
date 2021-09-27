@@ -14,4 +14,18 @@ export default class CategoryTypeOrmRepository implements ICategoryRepository<IC
   public async getCategory(): Promise<ICategoryPostgre[]> {
     return await this.categoryRepository.find();
   }
+
+  public async deleteCategoryById(categoryId: string): Promise<void> {
+    await this.categoryRepository.delete({ id: +categoryId });
+  }
+
+  public async getCategoryById(categoryId: string): Promise<ICategoryPostgre> {
+    return await this.categoryRepository.findOne({ id: +categoryId });
+  }
+
+  public async updateCategoryById(categoryId: string, data: ICategoryPostgre): Promise<void> {
+    const category = await this.categoryRepository.findOne({ id: +categoryId });
+    category.displayName = category.displayName || data.displayName;
+    await this.categoryRepository.save(category);
+  }
 }

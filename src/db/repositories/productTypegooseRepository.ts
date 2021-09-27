@@ -33,4 +33,13 @@ export default class ProductTypegooseRepository implements IProductRepository<IP
       );
     }
   }
+  public async getProductById(productId: string): Promise<IProductMongo> {
+    return this.productModel.findById(productId);
+  }
+  public async updateProductById(productId: string, data: IProductMongo): Promise<void> {
+    await this.productModel.findOneAndUpdate({ _id: productId }, data);
+  }
+  public async deleteProductById(productId: string): Promise<void> {
+    await this.productModel.remove({ _id: productId });
+  }
 }

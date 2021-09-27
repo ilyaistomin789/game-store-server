@@ -27,8 +27,11 @@ export default class Product implements IProductPostgres {
 
   @Column()
   totalRating: number;
-
-  @ManyToMany((type) => Category, (category) => category.products)
+  //TODO check product deleting in typeorm
+  @ManyToMany((type) => Category, (category) => category.products, {
+    onUpdate: 'CASCADE', // query log shows "ON UPDATE NO ACTION" no matter the value
+    onDelete: 'CASCADE', // property is correctly picked up
+  })
   @JoinTable()
   categories: Category[];
 
