@@ -8,7 +8,9 @@ export default class UserRatings {
   id: number;
   @ManyToOne(() => Account, (account) => account.id)
   account: number;
-  @ManyToOne(() => Product, (product) => product.id)
+  @ManyToOne(() => Product, (product) => product.id, {
+    onDelete: 'CASCADE',
+  })
   product: number;
   @Column()
   rating: number;

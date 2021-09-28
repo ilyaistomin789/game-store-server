@@ -34,14 +34,21 @@ export default class ProductTypeOrmRepository implements IProductRepository<IPro
   }
 
   public async getProductById(productId: string): Promise<IProductPostgres> {
-    return await this.productRepository.findOne({ id: +productId });
+    return await this.productRepository
+      .createQueryBuilder('product')
+      .innerJoinAndSelect('product.categories', 'category')
+      .where('product.id = :productId', { productId: +productId })
+      .getOne();
   }
 
   public async updateProductById(productId: string, data: IProductPostgres): Promise<void> {
+    if (data.categories) {
+      data.categories = await this.categoryRepository.findByIds(data.categories);
+    }
     const product = await this.productRepository.findOne({ id: +productId });
-    product.price = data.price || product.price;
-    product.displayName = data.displayName || product.displayName;
-    product.totalRating = data.totalRating || product.totalRating;
-    await this.productRepository.save(product);
+    await this.productRepository.save({
+      ...product,
+      ...data,
+    });
   }
 }

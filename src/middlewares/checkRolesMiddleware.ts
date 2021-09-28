@@ -1,8 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
+import { RequestHandlerParams } from 'express-serve-static-core';
 
-const checkRolesMiddleware = (rolesArray: string[]) => {
+const checkRolesMiddleware = (rolesArray: string[]): RequestHandlerParams => {
   const isIncluded = (userRole: string) => rolesArray.some((role) => role === userRole);
-  return (req: Request, res: Response, next: NextFunction) => {
+  return (req: Request, res: Response, next: NextFunction): void => {
     if (isIncluded(req.user.role)) {
       next();
     } else {

@@ -9,8 +9,8 @@ export default class Category implements ICategoryPostgre {
   @Column('text')
   displayName: string;
   @ManyToMany((type) => Product, (product) => product.categories, {
-    onUpdate: 'CASCADE', // query log shows "ON UPDATE NO ACTION" no matter the value
-    onDelete: 'CASCADE', // property is correctly picked up
+    onUpdate: 'CASCADE',
+    onDelete: 'CASCADE',
   })
   products: Product[];
   @CreateDateColumn()
