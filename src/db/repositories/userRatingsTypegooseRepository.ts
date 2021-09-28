@@ -4,6 +4,7 @@ import { DocumentType, getModelForClass } from '@typegoose/typegoose';
 import Product from '../mongo/models/product';
 import { IProduct } from '../interfaces/product.interface';
 import mongoose from 'mongoose';
+import { sendLastRatings } from '../../utils/socket-io';
 
 export default class UserRatingsTypegooseRepository implements IUserRatingsRepository {
   private productModel = getModelForClass(Product);
@@ -25,5 +26,6 @@ export default class UserRatingsTypegooseRepository implements IUserRatingsRepos
       { _id: product._id },
       { $set: { totalRating: product.totalRating, ratings: product.ratings } }
     );
+    sendLastRatings(await this.productModel.find().limit(10).sort('createdAt').lean());
   }
 }

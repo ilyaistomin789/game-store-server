@@ -7,11 +7,17 @@ import initializePassport from './config/passport-config';
 import passport from 'passport';
 import swaggerUi from 'swagger-ui-express';
 import swaggerDocument from './config/swagger-config';
-class App {
+import http from 'http';
+import { socketConnection } from './utils/socket-io';
+
+export default class App {
+  private readonly server: http.Server;
   public app: Application;
   public port: number;
   constructor(appInit: { port: number; controllers: IController[] }) {
     this.app = express();
+    this.server = http.createServer(this.app);
+    socketConnection(this.server);
     this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
     initializePassport(passport);
     this.app.use(passport.initialize());
@@ -35,11 +41,12 @@ class App {
     this.app.listen(this.port, () => {
       console.log(`App listening on the port ${this.port}`);
     });
+    this.server.listen(4000, () => {
+      console.log('WS is works');
+    });
   }
   private errorHandler = (err: Error, req: Request, res: Response, next: NextFunction): void => {
     logger.error(JSON.stringify(err));
     res.send(err.message);
   };
 }
-
-export default App;

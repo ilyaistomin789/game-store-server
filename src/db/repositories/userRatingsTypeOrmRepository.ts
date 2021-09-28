@@ -4,6 +4,7 @@ import { getConnectionManager } from 'typeorm';
 import { IProductPostgres } from '../interfaces/product.interface';
 import Product from '../postgres/entity/product';
 import UserRatings from '../postgres/entity/userRatings';
+import { sendLastRatings } from '../../utils/socket-io';
 
 export default class UserRatingsTypeOrmRepository implements IUserRatingsRepository {
   private manager = getConnectionManager().get('default');
@@ -35,5 +36,12 @@ export default class UserRatingsTypeOrmRepository implements IUserRatingsReposit
     const currentProduct = await this.productRepository.findOne(data.product);
     currentProduct.totalRating = Math.round(ratingsSum / ratingsCount);
     await this.productRepository.save(currentProduct);
+    const lastRatings = await this.userRatingsRepository
+      .createQueryBuilder('user_ratings')
+      .select()
+      .limit(10)
+      .addOrderBy('user_ratings.createdAt', 'DESC')
+      .getMany();
+    sendLastRatings(`${lastRatings}`);
   }
 }
