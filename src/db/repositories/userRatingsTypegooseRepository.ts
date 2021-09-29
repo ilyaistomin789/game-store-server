@@ -2,7 +2,7 @@ import { IUserRatingsRepository } from '../interfaces/userRatingsRepository.inte
 import { IUserRatingsDto, IUserRatingsMongo } from '../interfaces/userRatings.interface';
 import { DocumentType, getModelForClass } from '@typegoose/typegoose';
 import Product from '../mongo/models/product';
-import { IProduct } from '../interfaces/product.interface';
+import { IProduct, IProductMongo } from '../interfaces/product.interface';
 import mongoose from 'mongoose';
 import { sendLastRatings } from '../../utils/socket-io';
 
@@ -26,6 +26,17 @@ export default class UserRatingsTypegooseRepository implements IUserRatingsRepos
       { _id: product._id },
       { $set: { totalRating: product.totalRating, ratings: product.ratings } }
     );
-    sendLastRatings(await this.productModel.find().limit(10).sort('createdAt').lean());
+    const ratings: IProductMongo[] = await this.productModel
+      .find(
+        {},
+        {
+          _id: 1,
+          ratings: 1,
+        }
+      )
+      .limit(10)
+      .sort({ updatedAt: -1 });
+    const abc = ratings.filter((product) => Object.keys(product.ratings).length);
+    sendLastRatings(`${abc}`);
   }
 }

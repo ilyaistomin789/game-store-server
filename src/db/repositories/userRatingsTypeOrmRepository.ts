@@ -42,6 +42,6 @@ export default class UserRatingsTypeOrmRepository implements IUserRatingsReposit
       .limit(10)
       .addOrderBy('user_ratings.createdAt', 'DESC')
       .getMany();
-    sendLastRatings(`${lastRatings}`);
+    sendLastRatings(lastRatings);
   }
 }
