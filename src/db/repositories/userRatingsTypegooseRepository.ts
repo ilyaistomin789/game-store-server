@@ -1,10 +1,11 @@
 import { IUserRatingsRepository } from '../interfaces/userRatingsRepository.interface';
-import { IUserRatingsDto, IUserRatingsMongo } from '../interfaces/userRatings.interface';
+import { IUserRatingsDto } from '../interfaces/userRatings.interface';
 import { DocumentType, getModelForClass } from '@typegoose/typegoose';
 import Product from '../mongo/models/product';
 import { IProduct, IProductMongo } from '../interfaces/product.interface';
 import mongoose from 'mongoose';
 import { sendLastRatings } from '../../utils/socket-io';
+import { LastRatingsRepository } from '../index';
 
 export default class UserRatingsTypegooseRepository implements IUserRatingsRepository {
   private productModel = getModelForClass(Product);
@@ -26,17 +27,7 @@ export default class UserRatingsTypegooseRepository implements IUserRatingsRepos
       { _id: product._id },
       { $set: { totalRating: product.totalRating, ratings: product.ratings } }
     );
-    const ratings: IProductMongo[] = await this.productModel
-      .find(
-        {},
-        {
-          _id: 1,
-          ratings: 1,
-        }
-      )
-      .limit(10)
-      .sort({ updatedAt: -1 });
-    const abc = ratings.filter((product) => Object.keys(product.ratings).length);
-    sendLastRatings(`${abc}`);
+    await LastRatingsRepository.addLastRating({ product: data.product, rating: data.rating, comments: data.comments });
+    sendLastRatings(JSON.stringify(await LastRatingsRepository.getLastRatings()));
   }
 }

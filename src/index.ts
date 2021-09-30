@@ -7,6 +7,7 @@ import AccountController from './controllers/account.controller';
 import UserRatingsController from './controllers/userRatings.controller';
 import { IAccount } from './db/interfaces/account.interface';
 import OrderListController from './controllers/orderList.controller';
+import LastRatingsController from './controllers/lastRatings.controller';
 
 declare global {
   namespace Express {
@@ -26,6 +27,7 @@ const app = new App({
     new AccountController('/profile'),
     new UserRatingsController(),
     new OrderListController('/order-list'),
+    new LastRatingsController('/lastRatings'),
   ],
 });
 

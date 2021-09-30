@@ -13,6 +13,7 @@ import {
 import { IProductPostgres } from '../../interfaces/product.interface';
 import Category from './category';
 import UserRatings from './userRatings';
+import LastRatings from './lastRatings';
 
 @Entity()
 export default class Product implements IProductPostgres {
@@ -38,6 +39,11 @@ export default class Product implements IProductPostgres {
     cascade: true,
   })
   userRatings!: UserRatings[];
+
+  @OneToMany(() => LastRatings, (lastRatings) => lastRatings.product, {
+    cascade: true,
+  })
+  lastRatings!: LastRatings[];
 
   @CreateDateColumn()
   createdAt: Date;

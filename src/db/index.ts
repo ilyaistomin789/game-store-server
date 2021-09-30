@@ -21,11 +21,16 @@ import UserRatingsTypeOrmRepository from './repositories/userRatingsTypeOrmRepos
 import IOrderListRepository from './interfaces/orderListRepository.interface';
 import OrderListTypeOrmRepository from './repositories/orderListTypeOrmRepository';
 import OrderListTypegooseRepository from './repositories/orderListTypegooseRepository';
+import { ILastRatingsRepository } from './interfaces/lastRatingsRepository.interface';
+import cron from 'node-cron';
+import LastRatingsTypegooseRepository from './repositories/lastRatingsTypegooseRepository';
+import LastRatingsTypeOrmRepository from './repositories/lastRatingsTypeOrmRepository';
 let ProductRepository: IProductRepository<IProduct>;
 let CategoryRepository: ICategoryRepository<ICategory>;
 let AccountRepository: IAccountRepository<IAccount>;
 let UserRatingsRepository: IUserRatingsRepository;
 let OrderListRepository: IOrderListRepository;
+let LastRatingsRepository: ILastRatingsRepository;
 
 export const run = async (): Promise<void> => {
   try {
@@ -36,6 +41,7 @@ export const run = async (): Promise<void> => {
       AccountRepository = new AccountTypegooseRepository();
       UserRatingsRepository = new UserRatingsTypegooseRepository();
       OrderListRepository = new OrderListTypegooseRepository();
+      LastRatingsRepository = new LastRatingsTypegooseRepository();
     } else if (process.env.DB === 'pg') {
       await createConnection(postgreConfig);
       ProductRepository = new ProductTypeOrmRepository();
@@ -43,10 +49,21 @@ export const run = async (): Promise<void> => {
       AccountRepository = new AccountTypeOrmRepository();
       UserRatingsRepository = new UserRatingsTypeOrmRepository();
       OrderListRepository = new OrderListTypeOrmRepository();
+      LastRatingsRepository = new LastRatingsTypeOrmRepository();
     }
+    cron.schedule('0 0 * * 1', async () => {
+      await LastRatingsRepository.cleanLastRatings();
+    });
   } catch (e) {
     console.log(e.message);
   }
 };
 
-export { ProductRepository, CategoryRepository, AccountRepository, UserRatingsRepository, OrderListRepository };
+export {
+  ProductRepository,
+  CategoryRepository,
+  AccountRepository,
+  UserRatingsRepository,
+  OrderListRepository,
+  LastRatingsRepository,
+};
