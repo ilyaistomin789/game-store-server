@@ -13,7 +13,7 @@ export interface IOrderListMongo {
 }
 
 export interface IOrderListDto {
-  accountId: number | Schema.Types.ObjectId;
-  productId: number | Schema.Types.ObjectId;
+  accountId: string;
+  productId: string;
   quantity: number;
 }

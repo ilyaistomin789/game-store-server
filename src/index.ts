@@ -9,12 +9,12 @@ import { IAccount } from './db/interfaces/account.interface';
 import OrderListController from './controllers/orderList.controller';
 import LastRatingsController from './controllers/lastRatings.controller';
 import CronJob from './cron';
-
-declare global {
-  namespace Express {
-    interface Request {
-      user: IAccount;
-    }
+declare namespace Express {
+  export interface Request {
+    user: IAccount;
+  }
+  export interface Response {
+    user: IAccount;
   }
 }
 const cron = new CronJob();

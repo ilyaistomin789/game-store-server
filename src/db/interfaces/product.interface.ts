@@ -12,18 +12,18 @@ export interface IProduct {
   price: number;
   updatedAt?: Date;
   createdAt?: Date;
-  ratings?: Ref<IUserRatingsMongo>[];
+  ratings?: IUserRatingsMongo[];
 }
 
 export interface IProductMongo {
   _id?: Schema.Types.ObjectId;
-  categories: Ref<CategoryMongo>[];
+  categories?: Ref<CategoryMongo>[];
   displayName: string;
   totalRating: number;
   price: number;
   updatedAt?: Date;
   createdAt?: Date;
-  ratings?: Ref<IUserRatingsMongo>[];
+  ratings?: IUserRatingsMongo[];
 }
 export interface IProductPostgres {
   id?: number;

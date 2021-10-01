@@ -14,7 +14,7 @@ export interface ICategory {
 export interface ICategoryMongo {
   _id?: Schema.Types.ObjectId;
   displayName: string;
-  products: Ref<ProductMongo>[];
+  products?: Ref<ProductMongo>[];
   updatedAt?: Date;
   createdAt?: Date;
 }

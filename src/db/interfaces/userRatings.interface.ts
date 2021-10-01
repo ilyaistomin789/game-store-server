@@ -11,7 +11,7 @@ export interface IUserRatings {
 export interface IUserRatingsMongo {
   account: Schema.Types.ObjectId;
   rating: number;
-  comments?: string | null;
+  comments: string | null;
 }
 export interface IUserRatingsPostgres {
   product: number;
@@ -24,7 +24,7 @@ export interface IUserRatingsPostgres {
 export interface IUserRatingsDto {
   product: string;
   rating: number;
-  comments: string | null;
+  comments?: string | null;
   account: string;
   role: string;
 }

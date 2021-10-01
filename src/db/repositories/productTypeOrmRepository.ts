@@ -12,7 +12,7 @@ export default class ProductTypeOrmRepository implements IProductRepository<IPro
   public async createProduct(product: IProductPostgres, categoryIds: number[]): Promise<void> {
     const idArray = [];
     categoryIds.forEach((id) => idArray.push({ id: id }));
-    const categories = await this.categoryRepository.find({
+    const categories: ICategoryPostgre[] = await this.categoryRepository.find({
       where: idArray,
     });
     if (categories) {

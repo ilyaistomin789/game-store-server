@@ -3,13 +3,6 @@ import { ILastRatingsDto, ILastRatingsOutput, ILastRatingsPostgres } from '../in
 import LastRatings from '../postgres/entity/lastRatings';
 import { getConnectionManager } from 'typeorm';
 
-interface ILastRatingsValues {
-  comments?: string;
-  product: { displayName: string };
-  rating: number;
-  updatedAt: Date;
-}
-
 export default class LastRatingsTypeOrmRepository implements ILastRatingsRepository {
   private manager = getConnectionManager().get('default');
   private lastRatingsRepository = this.manager.getRepository<ILastRatingsPostgres>(LastRatings);

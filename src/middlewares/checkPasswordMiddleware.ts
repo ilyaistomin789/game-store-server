@@ -1,10 +1,11 @@
 import { NextFunction, Request, Response } from 'express';
 import bcrypt from 'bcrypt';
+import { IAccount } from '../db/interfaces/account.interface';
 const checkPasswordMiddleware = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const oldPassword = req.body.oldPassword;
-    const { password } = req.user;
-    const comparePassword = await bcrypt.compare(oldPassword, password);
+    const user = <IAccount>req.user;
+    const comparePassword = await bcrypt.compare(oldPassword, user.password);
     if (comparePassword) {
       next();
     } else {

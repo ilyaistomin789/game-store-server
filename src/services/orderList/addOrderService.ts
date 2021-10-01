@@ -1,12 +1,15 @@
 import { NextFunction, Request, Response } from 'express';
 import { OrderListRepository } from '../../db';
+import { IAccount } from '../../db/interfaces/account.interface';
+import { IOrderListDto } from '../../db/interfaces/orderList.interface';
 
 const addOrderService = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const { id, _id } = req.user;
+    const user = <IAccount>req.user;
+
     const { productId, quantity } = req.body;
-    const data = {
-      accountId: _id ? _id : id,
+    const data: IOrderListDto = {
+      accountId: user._id ? `${user._id}` : `${user.id}`,
       productId: productId,
       quantity: quantity,
     };

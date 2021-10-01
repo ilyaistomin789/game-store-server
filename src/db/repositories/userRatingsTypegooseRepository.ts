@@ -2,19 +2,22 @@ import { IUserRatingsRepository } from '../interfaces/userRatingsRepository.inte
 import { IUserRatingsDto } from '../interfaces/userRatings.interface';
 import { DocumentType, getModelForClass } from '@typegoose/typegoose';
 import Product from '../mongo/models/product';
-import { IProduct, IProductMongo } from '../interfaces/product.interface';
-import mongoose from 'mongoose';
+import { IProductMongo } from '../interfaces/product.interface';
+import mongoose, { Schema } from 'mongoose';
 import { sendLastRatings } from '../../utils/socket-io';
 import { LastRatingsRepository } from '../index';
 
 export default class UserRatingsTypegooseRepository implements IUserRatingsRepository {
   private productModel = getModelForClass(Product);
   public async addUserRating(data: IUserRatingsDto): Promise<void> {
-    const accountObjId = new mongoose.mongo.ObjectId(data.account);
-    const product: DocumentType<IProduct> = await this.productModel.findById(data.product);
+    const product = <IProductMongo>await this.productModel.findById(data.product);
     const userRatingsExists = product.ratings.some((rating) => `${rating.account}` === data.account);
     if (!userRatingsExists) {
-      product.ratings.push({ account: accountObjId, rating: data.rating, comments: data.comments });
+      product.ratings.push({
+        account: new mongoose.mongo.ObjectId(data.account),
+        rating: data.rating,
+        comments: data.comments,
+      });
     } else {
       const index = product.ratings.findIndex((rating) => `${rating.account}` === data.account);
       product.ratings[index].rating = data.rating;

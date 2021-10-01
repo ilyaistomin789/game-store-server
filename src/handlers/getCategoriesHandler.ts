@@ -7,10 +7,11 @@ import { getConnection, getRepository, Repository } from 'typeorm';
 import CategoryPostgres from '../db/postgres/entity/category';
 let category: ICategory[];
 import ProductMongo from '../db/mongo/models/product';
+import { IProductMongo } from '../db/interfaces/product.interface';
 
 export const categoryMongoHandler = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-  let category: ICategory;
-  let productsForCategory: ICategory[];
+  let category: any;
+  let productsForCategory: IProductMongo[];
   const { id } = req.params;
   const { includeProducts, includeTop3Products } = req.query;
   const categoryModel = getModelForClass(CategoryMongo);

@@ -52,6 +52,7 @@ export const productsMongoHandler = async (req: Request, res: Response, next: Ne
     products = await ProductRepository.getProduct();
     sendResponse(products, res, next);
   } else {
+    // @ts-ignore
     products = await productModel.find(query).exec();
     sendResponse(products, res, next);
   }
