@@ -8,6 +8,7 @@ import UserRatingsController from './controllers/userRatings.controller';
 import { IAccount } from './db/interfaces/account.interface';
 import OrderListController from './controllers/orderList.controller';
 import LastRatingsController from './controllers/lastRatings.controller';
+import CronJob from './cron';
 
 declare global {
   namespace Express {
@@ -16,6 +17,7 @@ declare global {
     }
   }
 }
+const cron = new CronJob();
 
 run();
 const app = new App({
@@ -30,5 +32,5 @@ const app = new App({
     new LastRatingsController('/lastRatings'),
   ],
 });
-
+cron.cleanLastRatings();
 app.listen();

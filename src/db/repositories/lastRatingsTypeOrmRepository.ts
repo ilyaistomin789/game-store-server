@@ -22,7 +22,7 @@ export default class LastRatingsTypeOrmRepository implements ILastRatingsReposit
   }
 
   public async getLastRatings(): Promise<ILastRatingsOutput[]> {
-    const lastRatings = await this.lastRatingsRepository
+    let lastRatings = await this.lastRatingsRepository
       .createQueryBuilder('last_ratings')
       .innerJoinAndSelect('last_ratings.product', 'product')
       .select('product.displayName')
@@ -30,16 +30,13 @@ export default class LastRatingsTypeOrmRepository implements ILastRatingsReposit
       .limit(10)
       .addOrderBy('last_ratings.updatedAt', 'DESC')
       .getMany();
-    const lastRatingsOutput: ILastRatingsOutput[] = [];
-    // @ts-ignore
-    lastRatings.forEach(({ comments, product: { displayName }, rating }) =>
-      lastRatingsOutput.push({
-        productName: displayName,
-        rating: rating,
-        comments: comments,
-      })
-    );
-    return lastRatingsOutput;
+
+    return lastRatings.map((lastRating) => ({
+      // @ts-ignore
+      productName: lastRating.product.displayName,
+      rating: lastRating.rating,
+      comments: lastRating.comments,
+    }));
   }
   public async cleanLastRatings(): Promise<void> {
     await this.lastRatingsRepository.delete({});

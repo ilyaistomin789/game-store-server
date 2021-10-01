@@ -22,7 +22,6 @@ import IOrderListRepository from './interfaces/orderListRepository.interface';
 import OrderListTypeOrmRepository from './repositories/orderListTypeOrmRepository';
 import OrderListTypegooseRepository from './repositories/orderListTypegooseRepository';
 import { ILastRatingsRepository } from './interfaces/lastRatingsRepository.interface';
-import cron from 'node-cron';
 import LastRatingsTypegooseRepository from './repositories/lastRatingsTypegooseRepository';
 import LastRatingsTypeOrmRepository from './repositories/lastRatingsTypeOrmRepository';
 let ProductRepository: IProductRepository<IProduct>;
@@ -51,9 +50,6 @@ export const run = async (): Promise<void> => {
       OrderListRepository = new OrderListTypeOrmRepository();
       LastRatingsRepository = new LastRatingsTypeOrmRepository();
     }
-    cron.schedule('0 0 * * 1', async () => {
-      await LastRatingsRepository.cleanLastRatings();
-    });
   } catch (e) {
     console.log(e.message);
   }

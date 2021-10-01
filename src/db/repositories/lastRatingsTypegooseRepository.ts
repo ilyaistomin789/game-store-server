@@ -23,16 +23,15 @@ export default class LastRatingsTypegooseRepository implements ILastRatingsRepos
   public async getLastRatings(): Promise<ILastRatingsOutput[]> {
     const lastRatings: ILastRatingsMongo[] = await this.lastRatingsModel.find().limit(10).sort({ updatedAt: -1 }),
       lastRatingsOutput: ILastRatingsOutput[] = [];
-    for (const lastRating of lastRatings) {
-      const productName: { displayName: string } = await this.productModel
-        .findById(lastRating.product)
-        .select({ displayName: 1, _id: 0 });
+    const productIds = lastRatings.map((lastRating) => lastRating.product);
+    const products = await this.productModel.find({ _id: productIds });
+    lastRatings.forEach((lastRating) => {
       lastRatingsOutput.push({
-        productName: productName.displayName,
+        productName: products.find((i) => `${i._id}` === `${lastRating.product}`).displayName,
         rating: lastRating.rating,
         comments: lastRating.comments,
       });
-    }
+    });
     return lastRatingsOutput;
   }
   public async cleanLastRatings(): Promise<void> {
