@@ -1,20 +1,23 @@
 import { IUserRatingsRepository } from '../interfaces/userRatingsRepository.interface';
 import { IUserRatingsDto } from '../interfaces/userRatings.interface';
-import { DocumentType, getModelForClass } from '@typegoose/typegoose';
+import { getModelForClass } from '@typegoose/typegoose';
 import Product from '../mongo/models/product';
 import { IProductMongo } from '../interfaces/product.interface';
-import mongoose, { Schema } from 'mongoose';
+import { ObjectId } from 'mongodb';
 import { sendLastRatings } from '../../utils/socket-io';
 import { LastRatingsRepository } from '../index';
 
 export default class UserRatingsTypegooseRepository implements IUserRatingsRepository {
   private productModel = getModelForClass(Product);
   public async addUserRating(data: IUserRatingsDto): Promise<void> {
-    const product = <IProductMongo>await this.productModel.findById(data.product);
+    const product = <IProductMongo> await this.productModel.findById(data.product);
+    if (!product) {
+      throw new Error('Incorrect product');
+    }
     const userRatingsExists = product.ratings.some((rating) => `${rating.account}` === data.account);
     if (!userRatingsExists) {
       product.ratings.push({
-        account: new mongoose.mongo.ObjectId(data.account),
+        account: ObjectId(data.account),
         rating: data.rating,
         comments: data.comments,
       });
