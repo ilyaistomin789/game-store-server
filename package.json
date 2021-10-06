@@ -58,7 +58,7 @@
       "npm": "6.x"
    },
    "scripts": {
-      "start": "node ./dist/index.js",
+      "start": "npm run build && node ./dist/index.js",
       "build": "rimraf ./dist && tsc",
       "test": "cross-env NODE_ENV=test tsc --project tsconfig.test.json && jest --rootDir=dist --detectOpenHandles",
       "dev": "ts-node src/index.ts",
