@@ -38,11 +38,8 @@ export default class App {
     }
   }
   public listen() {
-    this.app.listen(this.port, () => {
+    this.server.listen(this.port, () => {
       console.log(`App listening on the port ${this.port}`);
-    });
-    this.server.listen(+process.env.PORT || 4000, () => {
-      console.log('WS is works');
     });
   }
   private errorHandler = (err: Error, req: Request, res: Response, next: NextFunction): void => {
