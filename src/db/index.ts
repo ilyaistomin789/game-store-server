@@ -9,7 +9,7 @@ import CategoryTypegooseRepository from './repositories/categoryTypegooseReposit
 import mongoose from 'mongoose';
 import { createConnection } from 'typeorm';
 import { postgreConfig } from './config/config';
-import { DB_HOST, MONGO_PORT, DB_DATABASE_NAME, DB, NODE_ENV } from '../config/config';
+import { DB_HOST, MONGO_PORT, DB_DATABASE_NAME, DB, NODE_ENV, DB_PASSWORD } from '../config/config';
 import './mongo/services/logger';
 import { IAccountRepository } from './interfaces/accountRepository.interface';
 import { IAccount } from './interfaces/account.interface';
@@ -35,7 +35,9 @@ export const run = async (): Promise<void> => {
   try {
     if (DB === 'mongo') {
       if (NODE_ENV !== 'test') {
-        await mongoose.connect(`mongodb://${DB_HOST}:${MONGO_PORT}/${DB_DATABASE_NAME}`);
+        await mongoose.connect(
+          `mongodb+srv://IlyaIstomin:${DB_PASSWORD}@cluster0.ehjvz.mongodb.net/${DB_DATABASE_NAME}?retryWrites=true&w=majority`
+        );
       }
       ProductRepository = new ProductTypegooseRepository();
       CategoryRepository = new CategoryTypegooseRepository();
