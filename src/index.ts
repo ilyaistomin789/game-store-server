@@ -21,7 +21,7 @@ const cron = new CronJob();
 
 run();
 const app = new App({
-  port: 3000,
+  port: +process.env.PORT || 3000,
   controllers: [
     new ProductController('/products'),
     new CategoryController('/categories'),
