@@ -14,6 +14,7 @@ const registerAccountService = async (req: Request, res: Response, next: NextFun
     }
   } catch (e) {
     res.status(400);
+    console.log(e);
     next(e);
   }
 };

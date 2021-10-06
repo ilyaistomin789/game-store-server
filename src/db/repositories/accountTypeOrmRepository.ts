@@ -5,7 +5,7 @@ import Account from '../postgres/entity/account';
 import bcrypt from 'bcrypt';
 
 export default class AccountTypeOrmRepository implements IAccountRepository<IAccountPostgres> {
-  private accountRepository: Repository<IAccountPostgres> = getConnection().getRepository(Account);
+  private accountRepository: Repository<IAccountPostgres> = getConnection('default').getRepository(Account);
   public async registerAccount(account: IAccountPostgres): Promise<void> {
     const newUser: IAccountPostgres = new Account();
     const passwordHash = await bcrypt.hash(account.password, 10);

@@ -1,5 +1,9 @@
 import { ConnectionOptions } from 'typeorm';
 import { POSTGRES_PORT, DB_HOST, DB_PASSWORD, DB_DATABASE_NAME, DB_USERNAME } from '../../config/config';
+import path from 'path';
+const entities = path.join(__dirname, './../postgres/entity/**/*{.ts,.js}');
+const migrations = path.join(__dirname, './../postgres/migration/**/*{.ts,.js}');
+const subscribers = path.join(__dirname, './../postgres/subscriber/**/*{.ts,.js}');
 
 export const postgreConfig: ConnectionOptions = {
   type: 'postgres',
@@ -10,12 +14,12 @@ export const postgreConfig: ConnectionOptions = {
   database: DB_DATABASE_NAME,
   synchronize: true,
   logging: false,
-  entities: ['src/db/postgres/entity/**/*.ts'],
-  migrations: ['src/db/postgres/migration/**/*.ts'],
-  subscribers: ['src/db/postgres/subscriber/**/*.ts'],
+  entities: [entities],
+  migrations: [migrations],
+  subscribers: [subscribers],
   cli: {
-    entitiesDir: 'src/db/postgres/entity',
-    migrationsDir: 'src/db/postgres/migration',
-    subscribersDir: 'src/db/postgres/subscriber',
+    entitiesDir: path.join(__dirname, './../postgres/entity'),
+    migrationsDir: path.join(__dirname, './../postgres/migration'),
+    subscribersDir: path.join(__dirname, './../postgres/subscriber'),
   },
 };

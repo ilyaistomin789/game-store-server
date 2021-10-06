@@ -2,7 +2,7 @@
   "compilerOptions": {
     "lib": [
       "es5",
-      "es6",
+      "es6"
     ],
     "skipLibCheck": true,
     "target": "es5",
@@ -16,11 +16,12 @@
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "sourceRoot": "./src",
-    "types": []
+    "types": ["node", "jest"]
   },
   "include": [
     "src",
-    "test"
+    "test",
+    "node_modules/@types/jest/index.d.ts"
   ],
   "exclude": [
     "tmp",
