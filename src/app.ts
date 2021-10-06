@@ -41,7 +41,7 @@ export default class App {
     this.app.listen(this.port, () => {
       console.log(`App listening on the port ${this.port}`);
     });
-    this.server.listen(4000, () => {
+    this.server.listen(+process.env.PORT || 4000, () => {
       console.log('WS is works');
     });
   }
