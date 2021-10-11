@@ -1,5 +1,5 @@
 import { Column, Entity, PrimaryGeneratedColumn, ManyToMany, CreateDateColumn, UpdateDateColumn } from 'typeorm';
-import { ICategoryPostgre } from '../db/interfaces/category.interface';
+import { ICategoryPostgre } from '../../interfaces/category.interface';
 import Product from './product';
 
 @Entity()
@@ -8,7 +8,10 @@ export default class Category implements ICategoryPostgre {
   id: number;
   @Column('text')
   displayName: string;
-  @ManyToMany((type) => Product, (product) => product.categories)
+  @ManyToMany((type) => Product, (product) => product.categories, {
+    onUpdate: 'CASCADE',
+    onDelete: 'CASCADE',
+  })
   products: Product[];
   @CreateDateColumn()
   createdAt: Date;

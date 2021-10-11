@@ -1,28 +1,40 @@
 {
    "name": "studentslab",
    "version": "1.0.0",
+   "main": "./dist/index.js",
    "dependencies": {
       "@typegoose/typegoose": "^8.2.0",
       "@types/express": "^4.17.13",
+      "@types/mongodb": "^4.0.7",
+      "@types/mongoose": "^5.11.97",
       "dotenv": "^10.0.0",
       "express": "^4.17.1",
       "express-winston": "^4.2.0",
+      "jsonwebtoken": "^8.5.1",
       "mongodb": "^3.6.0",
       "mongoose": "^6.0.5",
+      "node-cron": "^3.0.0",
       "nodemon": "^2.0.12",
+      "passport": "^0.4.1",
+      "passport-jwt": "^4.0.0",
+      "passport-local": "^1.0.0",
       "pg": "^8.4.0",
       "pg-hstore": "^2.3.4",
+      "rand-token": "^1.0.1",
       "reflect-metadata": "^0.1.10",
+      "socket.io": "^4.2.0",
+      "swagger-ui-express": "^4.1.6",
       "ts-node": "^10.2.1",
       "typeorm": "0.2.37",
-      "winston": "^3.3.3"
-   },
-   "main": "index.js",
-   "devDependencies": {
+      "typescript": "^4.4.3",
+      "winston": "^3.3.3",
+      "@types/jest": "^27.0.2",
       "@types/node": "^8.0.29",
+      "@types/passport": "^1.0.7",
       "@types/validator": "^13.6.3",
       "@typescript-eslint/eslint-plugin": "^4.31.0",
       "@typescript-eslint/parser": "^4.31.0",
+      "bcrypt": "^5.0.1",
       "eslint": "^7.32.0",
       "eslint-config-standard": "^16.0.3",
       "eslint-plugin-import": "^2.24.2",
@@ -30,18 +42,25 @@
       "eslint-plugin-promise": "^5.1.0",
       "eslint-plugin-standard": "^5.0.0",
       "husky": "^7.0.2",
+      "jest": "^27.2.4",
+      "jest-mock-extended": "^1.0.10",
+      "mock-express-request": "^0.2.2",
+      "mock-express-response": "^0.3.0",
       "prettier": "2.4.0",
       "pretty-quick": "^3.1.1",
-      "rimraf": "^3.0.2",
-      "typescript": "3.3.3333",
-      "ts-node": "3.3.0"
+      "rimraf": "^3.0.2"
+   },
+   "engines": {
+      "node":
+      "14.x",
+      "npm": "6.x"
    },
    "scripts": {
-      "start": "ts-node src/index.ts",
+      "start": "node ./dist/index.js",
       "build": "rimraf ./dist && tsc",
-      "test": "echo \"Error: no test specified\" && exit 1",
-      "dev": "nodemon index.js",
-      "dev:server": "nodemon ./src/index.ts"
+      "test": "cross-env NODE_ENV=test tsc --project tsconfig.test.json && jest --rootDir=dist --detectOpenHandles",
+      "dev": "ts-node src/index.ts",
+      "dev:server": "nodemon ./dist/index.js"
    },
    "repository": {
       "type": "git",

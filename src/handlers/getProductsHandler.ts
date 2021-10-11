@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { getRepository } from 'typeorm';
-import ProductPostgres from '../entity/product';
+import ProductPostgres from '../db/postgres/entity/product';
 import ProductMongo from '../db/mongo/models/product';
 import { ProductRepository } from '../db';
 import { IProduct, IProductMongo } from '../db/interfaces/product.interface';
@@ -9,11 +9,11 @@ import { Query } from 'mongoose';
 
 let products: IProduct[];
 
-export const productsMongoHandler = async (request: Request, response: Response, next: NextFunction): Promise<void> => {
+export const productsMongoHandler = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const productModel = getModelForClass(ProductMongo);
   let sortByValues: string[];
   const query: Query<ProductMongo, IProductMongo> = new Query<ProductMongo, IProductMongo>();
-  const { displayName, minRating, price, sortBy, limit, page } = request.query;
+  const { displayName, minRating, price, sortBy, limit, page } = req.query;
   const andArray = [];
   if (displayName) {
     andArray.push({ displayName: { $regex: `.*${displayName}.*` } });
@@ -50,20 +50,17 @@ export const productsMongoHandler = async (request: Request, response: Response,
 
   if (!displayName && !minRating && !price && !sortBy && !page && !limit) {
     products = await ProductRepository.getProduct();
-    sendResponse(products, response, next);
+    sendResponse(products, res, next);
   } else {
+    // @ts-ignore
     products = await productModel.find(query).exec();
-    sendResponse(products, response, next);
+    sendResponse(products, res, next);
   }
 };
 
-export const productsPostgresHandler = async (
-  request: Request,
-  response: Response,
-  next: NextFunction
-): Promise<void> => {
+export const productsPostgresHandler = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const query = getRepository(ProductPostgres).createQueryBuilder('product');
-  const { displayName, minRating, price, sortBy, limit, page } = request.query;
+  const { displayName, minRating, price, sortBy, limit, page } = req.query;
   query.where({});
   if (displayName) {
     query.andWhere('product.displayName LIKE :searchString', { searchString: `%${displayName}%` });
@@ -97,15 +94,15 @@ export const productsPostgresHandler = async (
   }
   if (!displayName && !minRating && !price && !sortBy && !page && !limit) {
     products = await ProductRepository.getProduct();
-    sendResponse(products, response, next);
+    sendResponse(products, res, next);
   } else {
     products = await query.getMany();
-    sendResponse(products, response, next);
+    sendResponse(products, res, next);
   }
 };
 
 const sendResponse = (products: IProduct[], response: Response, next: NextFunction): void => {
-  if (Object.keys(products).length !== 0) {
+  if (Object.keys(products).length) {
     response.send(products);
   } else {
     response.status(404);

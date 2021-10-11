@@ -1,9 +1,9 @@
 import IProductRepository from '../interfaces/productRepository.interface';
 import { IProductPostgres } from '../interfaces/product.interface';
-import Product from '../../entity/product';
+import Product from '../postgres/entity/product';
 import { getConnectionManager } from 'typeorm';
 import { ICategoryPostgre } from '../interfaces/category.interface';
-import Category from '../../entity/category';
+import Category from '../postgres/entity/category';
 
 export default class ProductTypeOrmRepository implements IProductRepository<IProductPostgres> {
   private manager = getConnectionManager().get('default');
@@ -12,7 +12,7 @@ export default class ProductTypeOrmRepository implements IProductRepository<IPro
   public async createProduct(product: IProductPostgres, categoryIds: number[]): Promise<void> {
     const idArray = [];
     categoryIds.forEach((id) => idArray.push({ id: id }));
-    const categories = await this.categoryRepository.find({
+    const categories: ICategoryPostgre[] = await this.categoryRepository.find({
       where: idArray,
     });
     if (categories) {
@@ -27,5 +27,28 @@ export default class ProductTypeOrmRepository implements IProductRepository<IPro
 
   public async getProduct(): Promise<IProductPostgres[]> {
     return await this.productRepository.find();
+  }
+
+  public async deleteProductById(productId: string): Promise<void> {
+    await this.productRepository.delete({ id: +productId });
+  }
+
+  public async getProductById(productId: string): Promise<IProductPostgres> {
+    return await this.productRepository
+      .createQueryBuilder('product')
+      .innerJoinAndSelect('product.categories', 'category')
+      .where('product.id = :productId', { productId: +productId })
+      .getOne();
+  }
+
+  public async updateProductById(productId: string, data: IProductPostgres): Promise<void> {
+    if (data.categories) {
+      data.categories = await this.categoryRepository.findByIds(data.categories);
+    }
+    const product = await this.productRepository.findOne({ id: +productId });
+    await this.productRepository.save({
+      ...product,
+      ...data,
+    });
   }
 }

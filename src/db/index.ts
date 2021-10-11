@@ -9,68 +9,63 @@ import CategoryTypegooseRepository from './repositories/categoryTypegooseReposit
 import mongoose from 'mongoose';
 import { createConnection } from 'typeorm';
 import { postgreConfig } from './config/config';
-import { DB_HOST, DB_PORT, DB_DATABASE_NAME } from '../config';
+import { DB_HOST, MONGO_PORT, DB_DATABASE_NAME, DB, NODE_ENV, DB_PASSWORD } from '../config/config';
 import './mongo/services/logger';
+import { IAccountRepository } from './interfaces/accountRepository.interface';
+import { IAccount } from './interfaces/account.interface';
+import AccountTypegooseRepository from './repositories/accountTypegooseRepository';
+import AccountTypeOrmRepository from './repositories/accountTypeOrmRepository';
+import { IUserRatingsRepository } from './interfaces/userRatingsRepository.interface';
+import UserRatingsTypegooseRepository from './repositories/userRatingsTypegooseRepository';
+import UserRatingsTypeOrmRepository from './repositories/userRatingsTypeOrmRepository';
+import IOrderListRepository from './interfaces/orderListRepository.interface';
+import OrderListTypeOrmRepository from './repositories/orderListTypeOrmRepository';
+import OrderListTypegooseRepository from './repositories/orderListTypegooseRepository';
+import { ILastRatingsRepository } from './interfaces/lastRatingsRepository.interface';
+import LastRatingsTypegooseRepository from './repositories/lastRatingsTypegooseRepository';
+import LastRatingsTypeOrmRepository from './repositories/lastRatingsTypeOrmRepository';
 let ProductRepository: IProductRepository<IProduct>;
 let CategoryRepository: ICategoryRepository<ICategory>;
+let AccountRepository: IAccountRepository<IAccount>;
+let UserRatingsRepository: IUserRatingsRepository;
+let OrderListRepository: IOrderListRepository;
+let LastRatingsRepository: ILastRatingsRepository;
 
 export const run = async (): Promise<void> => {
   try {
-    if (process.env.DB === 'mongo') {
-      await mongoose.connect(`mongodb://${DB_HOST}:${DB_PORT}/${DB_DATABASE_NAME}`);
+    if (DB === 'mongo') {
+      if (NODE_ENV !== 'test') {
+        await mongoose.connect(
+          `mongodb+srv://IlyaIstomin:${DB_PASSWORD}@cluster0.ehjvz.mongodb.net/${DB_DATABASE_NAME}?retryWrites=true&w=majority`
+        );
+      }
       ProductRepository = new ProductTypegooseRepository();
       CategoryRepository = new CategoryTypegooseRepository();
-    } else if (process.env.DB === 'pg') {
-      await createConnection(postgreConfig);
+      AccountRepository = new AccountTypegooseRepository();
+      UserRatingsRepository = new UserRatingsTypegooseRepository();
+      OrderListRepository = new OrderListTypegooseRepository();
+      LastRatingsRepository = new LastRatingsTypegooseRepository();
+    } else if (DB === 'pg') {
+      if (NODE_ENV !== 'test') {
+        await createConnection(postgreConfig);
+      }
       ProductRepository = new ProductTypeOrmRepository();
       CategoryRepository = new CategoryTypeOrmRepository();
+      AccountRepository = new AccountTypeOrmRepository();
+      UserRatingsRepository = new UserRatingsTypeOrmRepository();
+      OrderListRepository = new OrderListTypeOrmRepository();
+      LastRatingsRepository = new LastRatingsTypeOrmRepository();
     }
   } catch (e) {
     console.log(e.message);
   }
 };
 
-export { ProductRepository, CategoryRepository };
-//
-// static async getRecordsByPage(
-//     skip: number,
-//     limit: number,
-//     sorting: string,
-//     category: ? string,
-//     podCategory : ? string,
-//     from : Date,
-//     to: Date
-// ): Promise <any> {
-//   let query = {
-//     category,
-//     podCategory
-//   };
-//   if (category === 'any') {
-//   query = {};
-// }
-// if (podCategory === 'any') {
-//   delete query.podCategory;
-// }
-// const count: number = await Product.count(query)
-//     .where('createdAt')
-//     .gte(from)
-//     .lte(to);
-// const products: ProductDoc = await Product.find(query)
-//     .sort(sorting)
-//     .skip(skip)
-//     .limit(limit)
-//     .where('createdAt')
-//     .gte(from)
-//     .lte(to)
-//     .populate({
-//       path: 'category',
-//     })
-//     .populate({
-//       path: 'podCategory',
-//     });
-//
-// return {
-//   count,
-//   products
-// };
-// }
+export {
+  ProductRepository,
+  CategoryRepository,
+  AccountRepository,
+  UserRatingsRepository,
+  OrderListRepository,
+  LastRatingsRepository,
+};

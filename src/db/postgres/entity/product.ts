@@ -5,12 +5,15 @@ import {
   JoinColumn,
   JoinTable,
   ManyToMany,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { IProductPostgres } from '../db/interfaces/product.interface';
+import { IProductPostgres } from '../../interfaces/product.interface';
 import Category from './category';
+import UserRatings from './userRatings';
+import LastRatings from './lastRatings';
 
 @Entity()
 export default class Product implements IProductPostgres {
@@ -25,10 +28,22 @@ export default class Product implements IProductPostgres {
 
   @Column()
   totalRating: number;
-
-  @ManyToMany((type) => Category, (category) => category.products)
+  @ManyToMany((type) => Category, (category) => category.products, {
+    onUpdate: 'CASCADE',
+    onDelete: 'CASCADE',
+  })
   @JoinTable()
   categories: Category[];
+
+  @OneToMany(() => UserRatings, (userRatings) => userRatings.product, {
+    cascade: true,
+  })
+  userRatings!: UserRatings[];
+
+  @OneToMany(() => LastRatings, (lastRatings) => lastRatings.product, {
+    cascade: true,
+  })
+  lastRatings!: LastRatings[];
 
   @CreateDateColumn()
   createdAt: Date;

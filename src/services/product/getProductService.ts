@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 
-import { DB } from '../../config';
+import { DB } from '../../config/config';
 import { productsMongoHandler, productsPostgresHandler } from '../../handlers/getProductsHandler';
 
 const getProductService = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
